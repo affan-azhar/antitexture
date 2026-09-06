@@ -1,1 +1,2112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AntiTexture — Premium AI Creative Studio</title>
+  <meta name="description" content="AntiTexture is a premium Pakistan-based AI creative studio delivering websites, visuals, video, and virtual models worldwide." />
+
+  <!-- Google Fonts: Anton (Headlines), Space Mono (Meta/Technical/Prices), Inter (Body), Playfair Display (Wordmark) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@1,700&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ==========================================================================
+       RESET & THEME SYSTEM
+       Palette:
+         - Background base:      #0A0A0A
+         - Foreground text:      #F5F5F5
+         - Secondary / Muted:    #8A8A8A
+         - Accent (spotlight):   #C8956D
+       ========================================================================== */
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg: #0A0A0A;
+      --fg: #F5F5F5;
+      --muted: #8A8A8A;
+      --accent: #C8956D;
+      --border-subtle: rgba(255, 255, 255, 0.08);
+      --card-bg: rgba(255, 255, 255, 0.02);
+      --card-hover-glow: rgba(200, 149, 109, 0.12);
+    }
+
+    html {
+      scroll-behavior: smooth;
+      background-color: var(--bg);
+      color: var(--fg);
+      overflow-x: hidden;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--bg);
+      color: var(--fg);
+      cursor: none;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      line-height: 1.6;
+    }
+
+    /* Keep native cursor on touch / mobile devices */
+    @media (hover: none) and (pointer: coarse), (max-width: 768px) {
+      body, a, button, input, select, textarea {
+        cursor: auto !important;
+      }
+      .cursor-dot, .cursor-ring {
+        display: none !important;
+      }
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+      cursor: none;
+      transition: color 0.25s ease;
+    }
+
+    button {
+      cursor: none;
+      font-family: inherit;
+      border: none;
+      background: none;
+      color: inherit;
+    }
+
+    /* Container Utility */
+    .container {
+      width: 100%;
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 0 clamp(20px, 4vw, 64px);
+    }
+
+    /* ==========================================================================
+       TYPOGRAPHY
+       ========================================================================== */
+    .font-headline {
+      font-family: 'Anton', sans-serif;
+      text-transform: uppercase;
+      letter-spacing: -2px;
+      line-height: 0.9;
+      font-weight: 400;
+    }
+
+    .font-mono {
+      font-family: 'Space Mono', monospace;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 2.5px;
+      color: var(--muted);
+      line-height: 1.4;
+    }
+
+    .font-body {
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      line-height: 1.7;
+      color: var(--muted);
+    }
+
+    /* ==========================================================================
+       CUSTOM CURSOR
+       - 8px camel dot (lerp ~0.15)
+       - 32px thin white ring (lerp ~0.08)
+       - On hover: ring scales to 50px, solid camel border, dot hidden
+       ========================================================================== */
+    .cursor-dot {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 8px;
+      height: 8px;
+      background: var(--accent);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 100001;
+      transform: translate(-50%, -50%);
+      transition: opacity 0.2s ease, transform 0.15s ease;
+      will-change: left, top;
+    }
+    .cursor-dot.hidden {
+      opacity: 0;
+      transform: translate(-50%, -50%) scale(0.3);
+    }
+
+    .cursor-ring {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 32px;
+      height: 32px;
+      border: 1px solid rgba(245, 245, 245, 0.7);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 100000;
+      transform: translate(-50%, -50%);
+      transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+                  height 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+                  border-color 0.25s ease,
+                  border-width 0.25s ease,
+                  background-color 0.25s ease,
+                  opacity 0.2s ease;
+      will-change: left, top;
+    }
+    .cursor-ring.hover {
+      width: 52px;
+      height: 52px;
+      border-color: var(--accent);
+      border-width: 1.5px;
+      background: rgba(200, 149, 109, 0.04);
+    }
+
+    /* ==========================================================================
+       TOP BAR (HERO HEADER)
+       Meta row: "LOCAL / [live clock] PKT" left, centered icon mark + wordmark,
+       camel dot nav trigger right.
+       ========================================================================== */
+    .top-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      padding: 24px clamp(20px, 4vw, 64px);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      pointer-events: auto;
+      background: linear-gradient(to bottom, rgba(10, 10, 10, 0.85) 0%, rgba(10, 10, 10, 0) 100%);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+
+    .top-bar__left {
+      font-family: 'Space Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 2.5px;
+      color: var(--muted);
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .top-bar__left .clock-val {
+      color: var(--fg);
+      font-weight: 700;
+    }
+
+    .top-bar__center {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    /* Wordmark + Broken Circle Icon Mark */
+    .brand-logo {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--fg);
+      text-decoration: none;
+    }
+    .icon-mark {
+      width: 18px;
+      height: 18px;
+      display: inline-block;
+      color: var(--accent);
+      flex-shrink: 0;
+      transition: transform 0.4s ease;
+    }
+    .brand-logo:hover .icon-mark {
+      transform: rotate(15deg) scale(1.1);
+    }
+    .icon-mark svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .wordmark__text {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-weight: 700;
+      font-style: italic;
+      font-size: 18px;
+      letter-spacing: -0.3px;
+      color: var(--fg);
+      line-height: 1;
+      display: inline-block;
+    }
+
+    /* Camel dot nav trigger button */
+    .nav-trigger-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .nav-trigger-hint {
+      font-family: 'Space Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 2px;
+      color: var(--muted);
+      opacity: 0;
+      transform: translateX(6px);
+      transition: opacity 0.25s ease, transform 0.25s ease;
+    }
+    .nav-trigger-wrapper:hover .nav-trigger-hint {
+      opacity: 1;
+      transform: translateX(0);
+      color: var(--accent);
+    }
+
+    .nav-trigger {
+      width: 14px;
+      height: 14px;
+      padding: 0;
+      border: none;
+      background: transparent;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+    .nav-trigger__dot {
+      width: 10px;
+      height: 10px;
+      background-color: var(--accent);
+      border-radius: 50%;
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
+      box-shadow: 0 0 12px rgba(200, 149, 109, 0.35);
+    }
+    .nav-trigger:hover .nav-trigger__dot {
+      transform: scale(1.4);
+      box-shadow: 0 0 18px rgba(200, 149, 109, 0.7);
+    }
+
+    /* ==========================================================================
+       FULL-SCREEN NAVIGATION OVERLAY
+       ========================================================================== */
+    .nav-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(10, 10, 10, 0.98);
+      backdrop-filter: blur(28px);
+      -webkit-backdrop-filter: blur(28px);
+      z-index: 99999;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: clamp(24px, 4vw, 64px);
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+                  visibility 0.45s ease;
+    }
+    .nav-overlay.active {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+    }
+
+    .nav-overlay__header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+    }
+
+    .nav-overlay__close {
+      font-family: 'Space Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--muted);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 0;
+      transition: color 0.25s ease;
+    }
+    .nav-overlay__close:hover {
+      color: var(--accent);
+    }
+
+    .nav-overlay__body {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 40px 0;
+    }
+
+    .nav-links {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: clamp(12px, 2.5vh, 24px);
+      width: 100%;
+      max-width: 900px;
+    }
+
+    .nav-links li {
+      display: flex;
+      align-items: baseline;
+      gap: clamp(16px, 3vw, 36px);
+      opacity: 0;
+      transform: translateY(35px);
+      transition: opacity 0.45s ease, transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .nav-overlay.active .nav-links li {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .nav-overlay.active .nav-links li:nth-child(1) { transition-delay: 0.10s; }
+    .nav-overlay.active .nav-links li:nth-child(2) { transition-delay: 0.16s; }
+    .nav-overlay.active .nav-links li:nth-child(3) { transition-delay: 0.22s; }
+    .nav-overlay.active .nav-links li:nth-child(4) { transition-delay: 0.28s; }
+    .nav-overlay.active .nav-links li:nth-child(5) { transition-delay: 0.34s; }
+
+    .nav-links__num {
+      font-family: 'Space Mono', monospace;
+      font-size: clamp(12px, 1.4vw, 15px);
+      letter-spacing: 2px;
+      color: var(--accent);
+      font-weight: 700;
+      flex-shrink: 0;
+      width: 32px;
+    }
+
+    .nav-links__text {
+      font-family: 'Anton', sans-serif;
+      font-size: clamp(42px, 7.5vw, 100px);
+      text-transform: uppercase;
+      letter-spacing: -1.5px;
+      line-height: 1;
+      color: var(--fg);
+      transition: color 0.25s ease, transform 0.25s ease;
+      display: inline-block;
+    }
+    .nav-links__text:hover {
+      color: var(--accent);
+      transform: translateX(12px);
+    }
+    .nav-links li.active .nav-links__text {
+      color: var(--accent);
+    }
+
+    .nav-overlay__footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-top: 1px solid var(--border-subtle);
+      padding-top: 24px;
+      font-family: 'Space Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 2px;
+      color: var(--muted);
+      text-transform: uppercase;
+    }
+    .nav-overlay__footer a {
+      color: var(--muted);
+    }
+    .nav-overlay__footer a:hover {
+      color: var(--accent);
+    }
+
+    /* ==========================================================================
+       SECTION 1: HERO
+       ========================================================================== */
+    .hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding-top: 120px;
+      padding-bottom: 60px;
+      overflow: hidden;
+      background: radial-gradient(circle at 50% 40%, rgba(200, 149, 109, 0.035) 0%, transparent 70%), var(--bg);
+    }
+
+    .hero-canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    .hero__content {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .hero__meta-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 28px;
+    }
+    .hero__meta-tag {
+      display: inline-block;
+      padding: 4px 10px;
+      border: 1px solid rgba(200, 149, 109, 0.3);
+      color: var(--accent);
+      font-family: 'Space Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+    .hero__meta-lead {
+      font-family: 'Space Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 2px;
+      color: var(--muted);
+      text-transform: uppercase;
+    }
+
+    .hero__headline {
+      font-size: clamp(52px, 12vw, 160px);
+      color: var(--fg);
+      margin-bottom: 40px;
+      line-height: 0.88;
+      letter-spacing: -2px;
+      user-select: none;
+    }
+    .hero__headline span.highlight-stroke {
+      display: block;
+    }
+
+    .hero__sub {
+      display: flex;
+      flex-direction: column;
+      gap: 36px;
+    }
+
+    .hero__tagline-row {
+      max-width: 650px;
+      font-size: 15px;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+    .hero__tagline-row strong {
+      color: var(--fg);
+      font-weight: 500;
+    }
+
+    .hero__stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      border-top: 1px solid var(--border-subtle);
+      padding-top: 28px;
+      margin-top: 12px;
+    }
+
+    .hero__stat {
+      font-family: 'Space Mono', monospace;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 2.5px;
+      color: var(--muted);
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .hero__stat-label {
+      color: var(--fg);
+      font-weight: 700;
+    }
+    .hero__stat-sub {
+      color: var(--muted);
+      font-size: 10px;
+      letter-spacing: 1.5px;
+    }
+
+    /* ==========================================================================
+       SHARED SECTION HEADERS
+       ========================================================================== */
+    section {
+      padding: clamp(90px, 12vh, 160px) 0;
+      position: relative;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 0;
+      border-top: 1px solid var(--border-subtle);
+      border-bottom: 1px solid var(--border-subtle);
+      margin-bottom: clamp(48px, 6vw, 80px);
+    }
+
+    .section-header__num {
+      font-family: 'Space Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 2.5px;
+      color: var(--muted);
+      width: 80px;
+    }
+
+    .section-header__label {
+      font-family: 'Space Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 3px;
+      color: var(--accent);
+      font-weight: 700;
+      text-align: center;
+      min-height: 16px;
+    }
+
+    .section-header__right {
+      font-family: 'Space Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 2.5px;
+      color: var(--muted);
+      text-align: right;
+      width: 140px;
+    }
+
+    /* ==========================================================================
+       SECTION 2: APPROACH
+       ========================================================================== */
+    .approach-list {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .approach-item {
+      border-bottom: 1px solid var(--border-subtle);
+      padding: clamp(36px, 5vw, 56px) 0;
+      display: grid;
+      grid-template-columns: 100px 1fr;
+      gap: 40px;
+      align-items: start;
+      transition: background-color 0.3s ease;
+    }
+    .approach-item:hover {
+      background-color: rgba(255, 255, 255, 0.015);
+    }
+
+    .approach-item__num {
+      font-family: 'Space Mono', monospace;
+      font-size: 12px;
+      letter-spacing: 2.5px;
+      color: var(--accent);
+      font-weight: 700;
+      padding-top: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .approach-item__num::before {
+      content: '';
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      background: var(--accent);
+      border-radius: 50%;
+    }
+
+    .approach-item__content {
+      max-width: 840px;
+    }
+
+    .approach-item__title {
+      font-family: 'Anton', sans-serif;
+      font-size: clamp(32px, 4.5vw, 56px);
+      text-transform: uppercase;
+      letter-spacing: -1px;
+      line-height: 1;
+      margin-bottom: 20px;
+      color: var(--fg);
+    }
+
+    .approach-item__desc {
+      font-size: clamp(14px, 1.2vw, 16px);
+      color: var(--muted);
+      line-height: 1.75;
+      margin-bottom: 20px;
+    }
+
+    .approach-item__meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .approach-tag {
+      font-family: 'Space Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 1.5px;
+      color: var(--muted);
+      border: 1px solid var(--border-subtle);
+      padding: 4px 10px;
+      text-transform: uppercase;
+    }
+
+    /* ==========================================================================
+       SECTION 3: SERVICES (PRODUCT CARDS)
+       ========================================================================== */
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 28px;
+    }
+
+    .service-card {
+      background: var(--card-bg);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      padding: clamp(28px, 3vw, 36px) 28px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 380px;
+      position: relative;
+      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+                  border-color 0.4s ease,
+                  box-shadow 0.4s ease,
+                  background-color 0.4s ease;
+    }
+    .service-card:hover {
+      transform: translateY(-4px);
+      border-color: var(--accent);
+      box-shadow: 0 16px 48px var(--card-hover-glow);
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    .service-card__badge {
+      font-family: 'Space Mono', monospace;
+      font-size: 9px;
+      letter-spacing: 2px;
+      color: var(--accent);
+      text-transform: uppercase;
+      margin-bottom: 12px;
+      display: inline-block;
+    }
+
+    .service-card__name {
+      font-family: 'Anton', sans-serif;
+      font-size: clamp(22px, 2vw, 26px);
+      text-transform: uppercase;
+      letter-spacing: -0.5px;
+      color: var(--fg);
+      line-height: 1.1;
+      margin-bottom: 14px;
+    }
+
+    .service-card__desc {
+      font-size: 13.5px;
+      color: var(--muted);
+      line-height: 1.65;
+      margin-bottom: 28px;
+      flex: 1;
+    }
+
+    .service-card__pricing {
+      margin-bottom: 22px;
+      padding-top: 18px;
+      border-top: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+    }
+
+    .service-card__from {
+      font-family: 'Space Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 2px;
+      color: var(--muted);
+      text-transform: uppercase;
+    }
+
+    .service-card__price {
+      font-family: 'Space Mono', monospace;
+      font-size: 30px;
+      font-weight: 700;
+      color: var(--fg);
+      letter-spacing: -1px;
+    }
+    .service-card__price span.curr {
+      color: var(--accent);
+      font-size: 20px;
+      margin-right: 2px;
+    }
+
+    .service-card__actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .btn-outline {
+      padding: 12px 14px;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      background: transparent;
+      color: var(--fg);
+      font-family: 'Space Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      text-align: center;
+      transition: border-color 0.25s ease, color 0.25s ease, transform 0.25s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .btn-outline:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      transform: translateY(-1px);
+    }
+
+    .btn-filled {
+      padding: 12px 14px;
+      border: 1px solid var(--accent);
+      background: var(--accent);
+      color: var(--bg);
+      font-family: 'Space Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      text-align: center;
+      font-weight: 700;
+      transition: background-color 0.25s ease, color 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .btn-filled:hover {
+      background: transparent;
+      color: var(--accent);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 18px rgba(200, 149, 109, 0.25);
+    }
+
+    /* ==========================================================================
+       SERVICE DETAILS MODAL
+       ========================================================================== */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(10, 10, 10, 0.94);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      z-index: 100000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: opacity 0.35s ease, visibility 0.35s ease;
+    }
+    .modal-backdrop.active {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+    }
+
+    .modal-window {
+      background: #0E0E0E;
+      border: 1px solid rgba(200, 149, 109, 0.3);
+      width: 100%;
+      max-width: 680px;
+      padding: clamp(28px, 4vw, 48px);
+      position: relative;
+      transform: translateY(30px) scale(0.98);
+      transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: 0 24px 80px rgba(0, 0, 0, 0.9);
+    }
+    .modal-backdrop.active .modal-window {
+      transform: translateY(0) scale(1);
+    }
+
+    .modal-close-btn {
+      position: absolute;
+      top: 24px;
+      right: 24px;
+      font-family: 'Space Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 2px;
+      color: var(--muted);
+      text-transform: uppercase;
+      padding: 6px;
+      transition: color 0.2s ease;
+    }
+    .modal-close-btn:hover {
+      color: var(--accent);
+    }
+
+    .modal-title {
+      font-family: 'Anton', sans-serif;
+      font-size: clamp(28px, 4vw, 44px);
+      text-transform: uppercase;
+      letter-spacing: -1px;
+      color: var(--fg);
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+
+    .modal-price-tag {
+      font-family: 'Space Mono', monospace;
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--accent);
+      letter-spacing: 1px;
+      margin-bottom: 24px;
+      display: inline-block;
+    }
+
+    .modal-desc {
+      font-size: 14.5px;
+      color: var(--muted);
+      line-height: 1.7;
+      margin-bottom: 30px;
+    }
+
+    .modal-specs-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      margin-bottom: 36px;
+      border-top: 1px solid var(--border-subtle);
+      border-bottom: 1px solid var(--border-subtle);
+      padding: 20px 0;
+    }
+
+    .modal-spec-item {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .modal-spec-key {
+      font-family: 'Space Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 2px;
+      color: var(--muted);
+      text-transform: uppercase;
+    }
+    .modal-spec-val {
+      font-size: 13.5px;
+      color: var(--fg);
+      font-weight: 500;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 14px;
+    }
+
+    /* ==========================================================================
+       SECTION 4: WORK / CONCEPT PROJECTS
+       ========================================================================== */
+    .work-disclaimer {
+      font-family: 'Space Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 2.5px;
+      color: var(--muted);
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 36px;
+    }
+    .work-disclaimer::before {
+      content: '//';
+      color: var(--accent);
+    }
+
+    .work-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 32px;
+    }
+
+    .work-card {
+      position: relative;
+      overflow: hidden;
+      background: var(--card-bg);
+      border: 1px solid var(--border-subtle);
+      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+                  border-color 0.4s ease,
+                  box-shadow 0.4s ease;
+    }
+    .work-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(200, 149, 109, 0.4);
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.8);
+    }
+
+    .work-card__visual {
+      width: 100%;
+      aspect-ratio: 16/10;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .work-card__visual--1 {
+      background:
+        radial-gradient(ellipse at 80% 20%, rgba(200, 149, 109, 0.28) 0%, transparent 60%),
+        radial-gradient(circle at 20% 80%, rgba(30, 24, 18, 0.8) 0%, transparent 70%),
+        linear-gradient(135deg, #18120D 0%, #0A0A0A 100%);
+    }
+    .work-card__visual--2 {
+      background:
+        radial-gradient(circle at 50% 50%, rgba(200, 149, 109, 0.15) 0%, transparent 50%),
+        linear-gradient(135deg, #101418 0%, #090B0E 60%, #050607 100%);
+    }
+    .work-card__visual--3 {
+      background:
+        radial-gradient(circle at 75% 75%, rgba(200, 149, 109, 0.22) 0%, transparent 55%),
+        linear-gradient(135deg, #14110E 0%, #1A1612 50%, #080808 100%);
+    }
+    .work-card__visual--4 {
+      background:
+        radial-gradient(circle at 25% 25%, rgba(200, 149, 109, 0.20) 0%, transparent 50%),
+        linear-gradient(135deg, #121316 0%, #181A20 50%, #0A0A0A 100%);
+    }
+
+    .work-card__visual::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(255, 255, 255, 0.02) 3px, rgba(255, 255, 255, 0.02) 4px),
+        repeating-linear-gradient(90deg, transparent, transparent 3px, rgba(200, 149, 109, 0.02) 3px, rgba(200, 149, 109, 0.02) 4px);
+      pointer-events: none;
+      transition: opacity 0.4s ease;
+    }
+    .work-card:hover .work-card__visual::before {
+      opacity: 0.8;
+    }
+
+    .work-card__watermark {
+      font-family: 'Anton', sans-serif;
+      font-size: clamp(38px, 6vw, 76px);
+      text-transform: uppercase;
+      letter-spacing: -1px;
+      color: rgba(255, 255, 255, 0.05);
+      position: absolute;
+      user-select: none;
+      transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), color 0.4s ease;
+    }
+    .work-card:hover .work-card__watermark {
+      transform: scale(1.05);
+      color: rgba(200, 149, 109, 0.12);
+    }
+
+    .work-card__info {
+      padding: 24px 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-top: 1px solid var(--border-subtle);
+    }
+
+    .work-card__title {
+      font-family: 'Anton', sans-serif;
+      font-size: 22px;
+      text-transform: uppercase;
+      letter-spacing: -0.5px;
+      color: var(--fg);
+      line-height: 1.1;
+      margin-bottom: 4px;
+    }
+
+    .work-card__category {
+      font-family: 'Space Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .work-card__tag {
+      font-family: 'Space Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 1.5px;
+      color: var(--accent);
+      border: 1px solid rgba(200, 149, 109, 0.3);
+      padding: 4px 10px;
+      text-transform: uppercase;
+    }
+
+    /* ==========================================================================
+       SECTION 5: CONTACT / CTA & FOOTER
+       ========================================================================== */
+    .contact {
+      text-align: center;
+      padding: clamp(100px, 14vh, 200px) 0 clamp(60px, 8vh, 100px);
+      position: relative;
+      overflow: hidden;
+      background: radial-gradient(circle at 50% 60%, rgba(200, 149, 109, 0.04) 0%, transparent 65%);
+    }
+
+    .contact__pre {
+      font-family: 'Space Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 3px;
+      color: var(--accent);
+      text-transform: uppercase;
+      margin-bottom: 24px;
+      display: block;
+    }
+
+    .contact__headline {
+      font-size: clamp(52px, 11vw, 150px);
+      line-height: 0.9;
+      letter-spacing: -2px;
+      margin-bottom: 40px;
+      color: var(--fg);
+    }
+
+    .contact__sub {
+      max-width: 540px;
+      margin: 0 auto 48px;
+      font-size: 15px;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .contact__btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 14px;
+      padding: 18px 48px;
+      border: 1px solid var(--accent);
+      font-family: 'Space Mono', monospace;
+      font-size: 12px;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--fg);
+      background: transparent;
+      transition: background-color 0.3s ease, color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .contact__btn:hover {
+      background: var(--accent);
+      color: var(--bg);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 32px rgba(200, 149, 109, 0.28);
+    }
+    .contact__btn::after {
+      content: '→';
+      display: inline-block;
+      transition: transform 0.3s ease;
+    }
+    .contact__btn:hover::after {
+      transform: translateX(4px);
+    }
+
+    footer {
+      border-top: 1px solid var(--border-subtle);
+      padding: 44px 0;
+      position: relative;
+      z-index: 2;
+    }
+
+    .footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 24px;
+    }
+
+    .footer__brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .footer__tagline {
+      font-family: 'Space Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 2px;
+      color: var(--muted);
+      text-transform: uppercase;
+    }
+
+    .footer__socials {
+      display: flex;
+      gap: clamp(16px, 2.5vw, 32px);
+      flex-wrap: wrap;
+    }
+    .footer__socials a {
+      font-family: 'Space Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--muted);
+      transition: color 0.25s ease;
+      position: relative;
+    }
+    .footer__socials a:hover {
+      color: var(--accent);
+    }
+
+    .footer__copy {
+      font-family: 'Space Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 2px;
+      color: var(--muted);
+      text-transform: uppercase;
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(35px);
+    }
+
+    @media (max-width: 1024px) {
+      .services-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .work-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .hero {
+        padding-top: 100px;
+      }
+      .hero__stats {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+      .services-grid {
+        grid-template-columns: 1fr;
+      }
+      .approach-item {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+      .section-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+      }
+      .section-header__right {
+        text-align: left;
+        width: auto;
+      }
+      .footer {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 18px;
+      }
+      .service-card__actions {
+        grid-template-columns: 1fr;
+      }
+      .top-bar__left {
+        font-size: 9px;
+        letter-spacing: 1.5px;
+      }
+      .modal-specs-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Custom Cursor System -->
+  <div class="cursor-dot" id="cursorDot"></div>
+  <div class="cursor-ring" id="cursorRing"></div>
+
+  <!-- Full-Screen Navigation Overlay -->
+  <nav class="nav-overlay" id="navOverlay" aria-label="Main Navigation">
+    <div class="nav-overlay__header">
+      <div class="brand-logo">
+        <span class="icon-mark">
+          <svg viewBox="0 0 36 36" fill="currentColor">
+            <path d="M 19.5 5.5 L 17 14 L 28.5 14.2 A 13.5 13.5 0 1 1 19.5 5.5 Z" />
+            <path d="M 23.5 1.5 L 21 10 L 32.5 10.2 A 13.5 13.5 0 0 0 23.5 1.5 Z" />
+          </svg>
+        </span>
+        <span class="wordmark__text">AntiTexture</span>
+      </div>
+      <button class="nav-overlay__close" id="navClose" aria-label="Close navigation">
+        <span>// CLOSE</span>
+      </button>
+    </div>
+
+    <div class="nav-overlay__body">
+      <ul class="nav-links">
+        <li data-section="hero">
+          <span class="nav-links__num">01</span>
+          <a href="#hero" class="nav-links__text nav-link">Studio</a>
+        </li>
+        <li data-section="approach">
+          <span class="nav-links__num">02</span>
+          <a href="#approach" class="nav-links__text nav-link">Approach</a>
+        </li>
+        <li data-section="services">
+          <span class="nav-links__num">03</span>
+          <a href="#services" class="nav-links__text nav-link">Services</a>
+        </li>
+        <li data-section="work">
+          <span class="nav-links__num">04</span>
+          <a href="#work" class="nav-links__text nav-link">Work</a>
+        </li>
+        <li data-section="contact">
+          <span class="nav-links__num">05</span>
+          <a href="#contact" class="nav-links__text nav-link">Contact</a>
+        </li>
+      </ul>
+    </div>
+
+    <div class="nav-overlay__footer">
+      <span>Pakistan // Worldwide</span>
+      <a href="mailto:contact@antitexture.com">contact@antitexture.com</a>
+    </div>
+  </nav>
+
+  <!-- Fixed Top Bar -->
+  <header class="top-bar">
+    <div class="top-bar__left">
+      LOCAL / <span class="clock-val" id="liveClock">00:00:00</span> <span style="color: var(--accent);">PKT</span>
+    </div>
+
+    <div class="top-bar__center">
+      <a href="#hero" class="brand-logo" aria-label="AntiTexture Home">
+        <span class="icon-mark">
+          <svg viewBox="0 0 36 36" fill="currentColor">
+            <path d="M 19.5 5.5 L 17 14 L 28.5 14.2 A 13.5 13.5 0 1 1 19.5 5.5 Z" />
+            <path d="M 23.5 1.5 L 21 10 L 32.5 10.2 A 13.5 13.5 0 0 0 23.5 1.5 Z" />
+          </svg>
+        </span>
+        <span class="wordmark__text">AntiTexture</span>
+      </a>
+    </div>
+
+    <div class="nav-trigger-wrapper">
+      <span class="nav-trigger-hint">MENU</span>
+      <button class="nav-trigger" id="navTrigger" aria-label="Open navigation">
+        <span class="nav-trigger__dot"></span>
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <!-- ========================================================================
+         SECTION 1: HERO
+         ======================================================================== -->
+    <section class="hero" id="hero">
+      <canvas class="hero-canvas" id="heroCanvas"></canvas>
+
+      <div class="container hero__content">
+        <div class="hero__meta-pill reveal">
+          <span class="hero__meta-tag">STUDIO 2026</span>
+          <span class="hero__meta-lead">PREMIUM AI CREATIVE PRODUCTION</span>
+        </div>
+
+        <h1 class="hero__headline font-headline reveal">
+          PREMIUM AI<br>
+          <span class="highlight-stroke">CREATIVE STUDIO</span>
+        </h1>
+
+        <div class="hero__sub">
+          <p class="hero__tagline-row reveal">
+            <strong>AntiTexture</strong> fuses human aesthetic direction with cutting-edge generative intelligence. 
+            We engineer bespoke websites, virtual campaigns, 4K model visuals, and high-conversion video reels for forward-thinking brands.
+          </p>
+
+          <div class="hero__stats">
+            <div class="hero__stat reveal">
+              <span class="hero__stat-label">BASED IN PAKISTAN</span>
+              <span class="hero__stat-sub">LAHORE // ISLAMABAD HQ</span>
+            </div>
+            <div class="hero__stat reveal">
+              <span class="hero__stat-label">AVAILABLE WORLDWIDE</span>
+              <span class="hero__stat-sub">GLOBAL ASYNC WORKFLOW</span>
+            </div>
+            <div class="hero__stat reveal">
+              <span class="hero__stat-label">AI CREATIVE STUDIO</span>
+              <span class="hero__stat-sub">NEXT-GEN DIGITAL CRAFT</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================
+         SECTION 2: APPROACH
+         ======================================================================== -->
+    <section id="approach">
+      <div class="container">
+        <div class="section-header reveal">
+          <span class="section-header__num">01</span>
+          <span class="section-header__label type-in" data-text="//APPROACH">//APPROACH</span>
+          <span class="section-header__right">THREE PHASES</span>
+        </div>
+
+        <div class="approach-list">
+          <div class="approach-item reveal">
+            <span class="approach-item__num">01</span>
+            <div class="approach-item__content">
+              <h3 class="approach-item__title">Discovery &amp; Analysis</h3>
+              <p class="font-body approach-item__desc">
+                We dismantle your existing brand landscape, target audience desires, and visual competitors. Every project begins with surgical research to identify what makes your aesthetic distinct — synthesizing market positioning with generative architecture to build an unbreakable creative foundation.
+              </p>
+              <div class="approach-item__meta">
+                <span class="approach-tag">Aesthetic Audit</span>
+                <span class="approach-tag">Generative Architecture</span>
+                <span class="approach-tag">Style Synthesis</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="approach-item reveal">
+            <span class="approach-item__num">02</span>
+            <div class="approach-item__content">
+              <h3 class="approach-item__title">Design &amp; Implementation</h3>
+              <p class="font-body approach-item__desc">
+                Where algorithmic power meets bespoke art direction. We deploy custom fine-tuned visual models, bespoke prompt matrices, and modern frontend engineering. The result is photorealistic fidelity, hyper-tailored virtual models, and interactive web experiences built at unprecedented velocity.
+              </p>
+              <div class="approach-item__meta">
+                <span class="approach-tag">4K Generative Pipelines</span>
+                <span class="approach-tag">Motion Engineering</span>
+                <span class="approach-tag">Clean Code</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="approach-item reveal">
+            <span class="approach-item__num">03</span>
+            <div class="approach-item__content">
+              <h3 class="approach-item__title">Feedback &amp; Revisions</h3>
+              <p class="font-body approach-item__desc">
+                Rigorous collaborative perfection. Every deliverable undergoes tightly calibrated review cycles. Because our generative engines eliminate the friction of physical studio sets and manual reshoots, revisions execute within 24-48 hours — keeping momentum relentlessly high.
+              </p>
+              <div class="approach-item__meta">
+                <span class="approach-tag">Rapid 24h Turnaround</span>
+                <span class="approach-tag">Multi-Resolution Export</span>
+                <span class="approach-tag">Production Signoff</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================
+         SECTION 3: SERVICES (PRODUCT CARDS)
+         ======================================================================== -->
+    <section id="services">
+      <div class="container">
+        <div class="section-header reveal">
+          <span class="section-header__num">02</span>
+          <span class="section-header__label type-in" data-text="//SERVICES">//SERVICES</span>
+          <span class="section-header__right">PRICING</span>
+        </div>
+
+        <div class="services-grid">
+          <div class="service-card reveal" 
+               data-service="AI Model Shoots" 
+               data-price="$349" 
+               data-desc="Photorealistic AI-generated model imagery for fashion lookbooks, catalogs, and campaigns — no physical shoot required."
+               data-timeline="48-72 Hours"
+               data-revisions="3 Revision Cycles"
+               data-deliverables="15 High-res 4K Renders, Multi-angle Sets, Full Commercial IP Rights, Web & Print Color Profiles"
+               data-specs="Custom Model Morphology, Lighting Matching, 300 DPI TIF/PNG">
+            <div>
+              <span class="service-card__badge">CAMPAIGN / EDITORIAL</span>
+              <h3 class="service-card__name">AI Model Shoots</h3>
+              <p class="service-card__desc">Photorealistic AI-generated model imagery for fashion lookbooks, catalogs, and campaigns — no physical shoot required.</p>
+            </div>
+            <div>
+              <div class="service-card__pricing">
+                <span class="service-card__from">FROM</span>
+                <div class="service-card__price"><span class="curr">$</span>349</div>
+              </div>
+              <div class="service-card__actions">
+                <button class="btn-outline btn-details">View Details</button>
+                <a href="mailto:contact@antitexture.com?subject=Inquiry:%20AI%20Model%20Shoots" class="btn-filled">Get a Quote</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="service-card reveal" 
+               data-service="AI Fashion Reels" 
+               data-price="$499" 
+               data-desc="Short-form video content featuring AI-generated models and motion — optimized for Instagram, TikTok, and paid ads."
+               data-timeline="3-5 Business Days"
+               data-revisions="2 Revision Cycles"
+               data-deliverables="4 Vertical Reels (9:16), Custom Audio Sync, Seamless Loop Variations, Hook Testing Cuts"
+               data-specs="4K 60fps Master, AI Fluid Motion, Platform Ready MP4/ProRes">
+            <div>
+              <span class="service-card__badge">MOTION / SOCIAL</span>
+              <h3 class="service-card__name">AI Fashion Reels</h3>
+              <p class="service-card__desc">Short-form video content featuring AI-generated models and motion — optimized for Instagram, TikTok, and paid ads.</p>
+            </div>
+            <div>
+              <div class="service-card__pricing">
+                <span class="service-card__from">FROM</span>
+                <div class="service-card__price"><span class="curr">$</span>499</div>
+              </div>
+              <div class="service-card__actions">
+                <button class="btn-outline btn-details">View Details</button>
+                <a href="mailto:contact@antitexture.com?subject=Inquiry:%20AI%20Fashion%20Reels" class="btn-filled">Get a Quote</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="service-card reveal" 
+               data-service="E-Commerce Web Design" 
+               data-price="$799" 
+               data-desc="Conversion-focused Shopify and custom storefronts with AI-generated product visuals, copy, and brand identity baked in."
+               data-timeline="7-10 Business Days"
+               data-revisions="Unlimited Feedback Sprints"
+               data-deliverables="Full Storefront Architecture, AI Visual Asset Library, Mobile Conversion Optimization, Speed Optimization"
+               data-specs="Shopify Liquid / Custom Headless, 95+ PageSpeed, Stripe Ready">
+            <div>
+              <span class="service-card__badge">DIGITAL STOREFRONT</span>
+              <h3 class="service-card__name">E-Commerce Web Design</h3>
+              <p class="service-card__desc">Conversion-focused Shopify and custom storefronts with AI-generated product visuals, copy, and brand identity baked in.</p>
+            </div>
+            <div>
+              <div class="service-card__pricing">
+                <span class="service-card__from">FROM</span>
+                <div class="service-card__price"><span class="curr">$</span>799</div>
+              </div>
+              <div class="service-card__actions">
+                <button class="btn-outline btn-details">View Details</button>
+                <a href="mailto:contact@antitexture.com?subject=Inquiry:%20E-Commerce%20Web%20Design" class="btn-filled">Get a Quote</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="service-card reveal" 
+               data-service="Social Media Content" 
+               data-price="$249" 
+               data-desc="Monthly content packages — AI-crafted graphics, carousels, stories, and captions tailored to your brand voice and aesthetic."
+               data-timeline="Monthly Retainer"
+               data-revisions="Fast Turnaround"
+               data-deliverables="30 Brand-Aligned Visuals, 4 Carousels, High-CTR Story Templates, Comprehensive Caption Bank"
+               data-specs="Multi-Ratio Exports (1:1, 4:5, 9:16), Figma Source Files Included">
+            <div>
+              <span class="service-card__badge">RETAINER / ORGANIC</span>
+              <h3 class="service-card__name">Social Media Content</h3>
+              <p class="service-card__desc">Monthly content packages — AI-crafted graphics, carousels, stories, and captions tailored to your brand voice and aesthetic.</p>
+            </div>
+            <div>
+              <div class="service-card__pricing">
+                <span class="service-card__from">FROM</span>
+                <div class="service-card__price"><span class="curr">$</span>249</div>
+              </div>
+              <div class="service-card__actions">
+                <button class="btn-outline btn-details">View Details</button>
+                <a href="mailto:contact@antitexture.com?subject=Inquiry:%20Social%20Media%20Content" class="btn-filled">Get a Quote</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="service-card reveal" 
+               data-service="AI Product Photography" 
+               data-price="$199" 
+               data-desc="Clean, studio-quality product shots generated entirely with AI — perfect for e-commerce listings, ads, and catalogs."
+               data-timeline="24-48 Hours"
+               data-revisions="2 Revision Cycles"
+               data-deliverables="10 Pure White & Lifestyle Environments, Texture Micro-Focus, Reflection & Caustic Lighting"
+               data-specs="Transparent PNG, Shadow Layer Isolation, 5000px Ultra-Res">
+            <div>
+              <span class="service-card__badge">STUDIO / STILL LIFE</span>
+              <h3 class="service-card__name">AI Product Photography</h3>
+              <p class="service-card__desc">Clean, studio-quality product shots generated entirely with AI — perfect for e-commerce listings, ads, and catalogs.</p>
+            </div>
+            <div>
+              <div class="service-card__pricing">
+                <span class="service-card__from">FROM</span>
+                <div class="service-card__price"><span class="curr">$</span>199</div>
+              </div>
+              <div class="service-card__actions">
+                <button class="btn-outline btn-details">View Details</button>
+                <a href="mailto:contact@antitexture.com?subject=Inquiry:%20AI%20Product%20Photography" class="btn-filled">Get a Quote</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="service-card reveal" 
+               data-service="AI Video Ads" 
+               data-price="$599" 
+               data-desc="Scroll-stopping video advertisements built with AI — from concept and script to final render, ready for Meta, YouTube, and TikTok."
+               data-timeline="4-6 Business Days"
+               data-revisions="3 Revision Cycles"
+               data-deliverables="3 Creative Variations (Direct Response / Brand Aesthetic), Scriptwriting, AI Voiceover, Subtitles"
+               data-specs="1080p / 4K Master, Sound Design, Meta Ads Best Practice Ratio">
+            <div>
+              <span class="service-card__badge">PERFORMANCE / ADS</span>
+              <h3 class="service-card__name">AI Video Ads</h3>
+              <p class="service-card__desc">Scroll-stopping video advertisements built with AI — from concept and script to final render, ready for Meta, YouTube, and TikTok.</p>
+            </div>
+            <div>
+              <div class="service-card__pricing">
+                <span class="service-card__from">FROM</span>
+                <div class="service-card__price"><span class="curr">$</span>599</div>
+              </div>
+              <div class="service-card__actions">
+                <button class="btn-outline btn-details">View Details</button>
+                <a href="mailto:contact@antitexture.com?subject=Inquiry:%20AI%20Video%20Ads" class="btn-filled">Get a Quote</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================
+         SECTION 4: WORK / CONCEPT PROJECTS
+         ======================================================================== -->
+    <section id="work">
+      <div class="container">
+        <div class="section-header reveal">
+          <span class="section-header__num">03</span>
+          <span class="section-header__label type-in" data-text="//WORK">//WORK</span>
+          <span class="section-header__right">CONCEPT PROJECTS</span>
+        </div>
+
+        <p class="work-disclaimer reveal">Studio concept work — no client projects yet</p>
+
+        <div class="work-grid">
+          <div class="work-card reveal">
+            <div class="work-card__visual work-card__visual--1">
+              <span class="work-card__watermark">NOOR</span>
+            </div>
+            <div class="work-card__info">
+              <div>
+                <h3 class="work-card__title">Noor Collection</h3>
+                <span class="work-card__category">AI MODEL SHOOT // HAUTE COUTURE</span>
+              </div>
+              <span class="work-card__tag">CONCEPT</span>
+            </div>
+          </div>
+
+          <div class="work-card reveal">
+            <div class="work-card__visual work-card__visual--2">
+              <span class="work-card__watermark">VEIL</span>
+            </div>
+            <div class="work-card__info">
+              <div>
+                <h3 class="work-card__title">Veil Commerce</h3>
+                <span class="work-card__category">E-COMMERCE DESIGN // DIGITAL APPAREL</span>
+              </div>
+              <span class="work-card__tag">CONCEPT</span>
+            </div>
+          </div>
+
+          <div class="work-card reveal">
+            <div class="work-card__visual work-card__visual--3">
+              <span class="work-card__watermark">DUSK</span>
+            </div>
+            <div class="work-card__info">
+              <div>
+                <h3 class="work-card__title">Dusk Fragrance</h3>
+                <span class="work-card__category">PRODUCT PHOTOGRAPHY // LUXURY SCENT</span>
+              </div>
+              <span class="work-card__tag">CONCEPT</span>
+            </div>
+          </div>
+
+          <div class="work-card reveal">
+            <div class="work-card__visual work-card__visual--4">
+              <span class="work-card__watermark">MERIDIAN</span>
+            </div>
+            <div class="work-card__info">
+              <div>
+                <h3 class="work-card__title">Meridian Studios</h3>
+                <span class="work-card__category">VIDEO AD // CINEMATIC SOCIAL CAMPAIGN</span>
+              </div>
+              <span class="work-card__tag">CONCEPT</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================
+         SECTION 5: CONTACT / CTA
+         ======================================================================== -->
+    <section class="contact" id="contact">
+      <div class="container">
+        <span class="contact__pre reveal">// READY TO INITIATE</span>
+        <h2 class="contact__headline font-headline reveal">
+          LET'S BUILD<br>SOMETHING
+        </h2>
+        <p class="contact__sub reveal font-body">
+          We collaborate with fashion brands, retail visionaries, and creative agencies worldwide. 
+          Tell us about your campaign goals and receive a custom generative proposal within 24 hours.
+        </p>
+        <div class="reveal">
+          <a href="mailto:contact@antitexture.com?subject=New%20Project%20Inquiry%20%E2%80%94%20AntiTexture" class="contact__btn">
+            Initiate Project
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container footer">
+      <div class="footer__brand">
+        <span class="icon-mark" style="width: 14px; height: 14px;">
+          <svg viewBox="0 0 36 36" fill="currentColor">
+            <path d="M 19.5 5.5 L 17 14 L 28.5 14.2 A 13.5 13.5 0 1 1 19.5 5.5 Z" />
+            <path d="M 23.5 1.5 L 21 10 L 32.5 10.2 A 13.5 13.5 0 0 0 23.5 1.5 Z" />
+          </svg>
+        </span>
+        <span class="wordmark__text" style="font-size: 15px;">AntiTexture</span>
+        <span class="footer__tagline">// AI CREATIVE STUDIO</span>
+      </div>
+
+      <div class="footer__socials">
+        <a href="https://instagram.com/antitexture" target="_blank" rel="noopener">Instagram</a>
+        <a href="https://linkedin.com/company/antitexture" target="_blank" rel="noopener">LinkedIn</a>
+        <a href="https://tiktok.com/@antitexture" target="_blank" rel="noopener">TikTok</a>
+        <a href="https://facebook.com/antitexture" target="_blank" rel="noopener">Facebook</a>
+      </div>
+
+      <span class="footer__copy">&copy; 2026 AntiTexture. All rights reserved.</span>
+    </div>
+  </footer>
+
+  <!-- Service Details Modal Drawer -->
+  <div class="modal-backdrop" id="serviceModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-window">
+      <button class="modal-close-btn" id="modalClose" aria-label="Close details modal">// CLOSE [ESC]</button>
+      <div class="service-card__badge" id="modalBadge">SERVICE BREAKDOWN</div>
+      <h3 class="modal-title" id="modalTitle">Service Name</h3>
+      <div class="modal-price-tag" id="modalPrice">STARTING FROM $000</div>
+      <p class="modal-desc" id="modalDesc">Detailed description goes here.</p>
+
+      <div class="modal-specs-grid">
+        <div class="modal-spec-item">
+          <span class="modal-spec-key">Turnaround Time</span>
+          <span class="modal-spec-val" id="modalTimeline">—</span>
+        </div>
+        <div class="modal-spec-item">
+          <span class="modal-spec-key">Revisions</span>
+          <span class="modal-spec-val" id="modalRevisions">—</span>
+        </div>
+        <div class="modal-spec-item">
+          <span class="modal-spec-key">Deliverables</span>
+          <span class="modal-spec-val" id="modalDeliverables">—</span>
+        </div>
+        <div class="modal-spec-item">
+          <span class="modal-spec-key">Technical Specs</span>
+          <span class="modal-spec-val" id="modalSpecs">—</span>
+        </div>
+      </div>
+
+      <div class="modal-actions">
+        <a href="mailto:contact@antitexture.com" class="btn-filled" id="modalQuoteBtn" style="padding: 14px 28px;">Request Scope &amp; Quote</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- GSAP 3.12.5 + ScrollTrigger via CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+  <script>
+    /* ==========================================================================
+       1. LIVE CLOCK (Pakistan Time PKT UTC+5)
+       ========================================================================== */
+    function updateLiveClock() {
+      const clockEl = document.getElementById('liveClock');
+      if (!clockEl) return;
+      const now = new Date();
+      const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
+      const pkt = new Date(utc + (3600000 * 5));
+      const h = String(pkt.getHours()).padStart(2, '0');
+      const m = String(pkt.getMinutes()).padStart(2, '0');
+      const s = String(pkt.getSeconds()).padStart(2, '0');
+      clockEl.textContent = `${h}:${m}:${s}`;
+    }
+    updateLiveClock();
+    setInterval(updateLiveClock, 1000);
+
+    /* ==========================================================================
+       2. CUSTOM CURSOR
+       ========================================================================== */
+    const dot = document.getElementById('cursorDot');
+    const ring = document.getElementById('cursorRing');
+    let mouseX = -200, mouseY = -200;
+    let dotX = -200, dotY = -200;
+    let ringX = -200, ringY = -200;
+    let isCursorVisible = false;
+
+    document.addEventListener('mousemove', e => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+      if (!isCursorVisible) {
+        dotX = mouseX;
+        dotY = mouseY;
+        ringX = mouseX;
+        ringY = mouseY;
+        isCursorVisible = true;
+        dot.style.opacity = '1';
+        ring.style.opacity = '1';
+      }
+    });
+
+    document.addEventListener('mouseleave', () => {
+      dot.style.opacity = '0';
+      ring.style.opacity = '0';
+      isCursorVisible = false;
+    });
+
+    document.addEventListener('mouseenter', () => {
+      dot.style.opacity = '1';
+      ring.style.opacity = '1';
+      isCursorVisible = true;
+    });
+
+    const isInteractive = el => {
+      return el && el.closest && el.closest('a, button, [role="button"], .service-card, .work-card, .nav-trigger, .nav-trigger-wrapper, input, select');
+    };
+
+    document.addEventListener('mouseover', e => {
+      if (isInteractive(e.target)) {
+        ring.classList.add('hover');
+        dot.classList.add('hidden');
+      }
+    });
+
+    document.addEventListener('mouseout', e => {
+      if (isInteractive(e.target)) {
+        ring.classList.remove('hover');
+        dot.classList.remove('hidden');
+      }
+    });
+
+    function animateCursor() {
+      dotX += (mouseX - dotX) * 0.15;
+      dotY += (mouseY - dotY) * 0.15;
+      ringX += (mouseX - ringX) * 0.08;
+      ringY += (mouseY - ringY) * 0.08;
+
+      dot.style.left = `${dotX}px`;
+      dot.style.top = `${dotY}px`;
+      ring.style.left = `${ringX}px`;
+      ring.style.top = `${ringY}px`;
+
+      requestAnimationFrame(animateCursor);
+    }
+    animateCursor();
+
+    /* ==========================================================================
+       3. SIGNATURE INTERACTION: HERO CANVAS CURSOR-THREAD TRAIL
+       ========================================================================== */
+    const canvas = document.getElementById('heroCanvas');
+    const heroEl = document.getElementById('hero');
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+    let lastSpawnX = null;
+    let lastSpawnY = null;
+    const SPACING = 15;
+    const MAX_PARTICLES = 150;
+    const LIFETIME = 800;
+
+    function resizeHeroCanvas() {
+      if (!heroEl || !canvas) return;
+      const dpr = window.devicePixelRatio || 1;
+      const rect = heroEl.getBoundingClientRect();
+      canvas.width = rect.width * dpr;
+      canvas.height = rect.height * dpr;
+      canvas.style.width = `${rect.width}px`;
+      canvas.style.height = `${rect.height}px`;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+    resizeHeroCanvas();
+    window.addEventListener('resize', resizeHeroCanvas);
+
+    function spawnStitch(x, y) {
+      if (particles.length >= MAX_PARTICLES) {
+        particles.shift();
+      }
+      particles.push({
+        x: x,
+        y: y,
+        born: performance.now(),
+        size: 6
+      });
+    }
+
+    heroEl.addEventListener('mousemove', e => {
+      const rect = heroEl.getBoundingClientRect();
+      const curX = e.clientX - rect.left;
+      const curY = e.clientY - rect.top;
+
+      if (lastSpawnX === null || lastSpawnY === null) {
+        lastSpawnX = curX;
+        lastSpawnY = curY;
+        spawnStitch(curX, curY);
+        return;
+      }
+
+      const dx = curX - lastSpawnX;
+      const dy = curY - lastSpawnY;
+      const dist = Math.hypot(dx, dy);
+
+      if (dist >= SPACING) {
+        const steps = Math.floor(dist / SPACING);
+        for (let i = 1; i <= steps; i++) {
+          const t = i / steps;
+          const sx = lastSpawnX + dx * t;
+          const sy = lastSpawnY + dy * t;
+          spawnStitch(sx, sy);
+        }
+        lastSpawnX = curX;
+        lastSpawnY = curY;
+      }
+    });
+
+    heroEl.addEventListener('mouseleave', () => {
+      lastSpawnX = null;
+      lastSpawnY = null;
+    });
+
+    function renderHeroTrail(now) {
+      const rect = heroEl.getBoundingClientRect();
+      ctx.clearRect(0, 0, rect.width, rect.height);
+
+      particles = particles.filter(p => {
+        const age = now - p.born;
+        if (age >= LIFETIME) return false;
+
+        const progress = age / LIFETIME;
+        const alpha = Math.max(0, 1 - progress);
+        const currentSize = p.size * (1 - progress * 0.65);
+
+        ctx.save();
+        ctx.globalAlpha = alpha;
+        ctx.fillStyle = '#C8956D';
+        ctx.fillRect(p.x - currentSize / 2, p.y - currentSize / 2, currentSize, currentSize);
+        ctx.restore();
+
+        return true;
+      });
+
+      requestAnimationFrame(renderHeroTrail);
+    }
+    requestAnimationFrame(renderHeroTrail);
+
+    /* ==========================================================================
+       4. NAVIGATION OVERLAY (FULL-SCREEN)
+       ========================================================================== */
+    const navTrigger = document.getElementById('navTrigger');
+    const navOverlay = document.getElementById('navOverlay');
+    const navClose = document.getElementById('navClose');
+    const navLinks = document.querySelectorAll('.nav-link');
+
+    function openNav() {
+      navOverlay.classList.add('active');
+      document.body.style.overflow = 'hidden';
+      updateActiveNavLink();
+    }
+
+    function closeNav() {
+      navOverlay.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    navTrigger.addEventListener('click', openNav);
+    navClose.addEventListener('click', closeNav);
+
+    navLinks.forEach(link => {
+      link.addEventListener('click', () => {
+        closeNav();
+      });
+    });
+
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') {
+        if (navOverlay.classList.contains('active')) closeNav();
+        if (serviceModal.classList.contains('active')) closeModal();
+      }
+    });
+
+    function updateActiveNavLink() {
+      const sections = ['hero', 'approach', 'services', 'work', 'contact'];
+      let currentSection = 'hero';
+      const scrollPos = window.scrollY + 200;
+
+      sections.forEach(id => {
+        const el = document.getElementById(id);
+        if (el && el.offsetTop <= scrollPos) {
+          currentSection = id;
+        }
+      });
+
+      document.querySelectorAll('.nav-links li').forEach(li => {
+        if (li.getAttribute('data-section') === currentSection) {
+          li.classList.add('active');
+        } else {
+          li.classList.remove('active');
+        }
+      });
+    }
+
+    /* ==========================================================================
+       5. SERVICES DETAILS MODAL
+       ========================================================================== */
+    const serviceModal = document.getElementById('serviceModal');
+    const modalClose = document.getElementById('modalClose');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalPrice = document.getElementById('modalPrice');
+    const modalDesc = document.getElementById('modalDesc');
+    const modalTimeline = document.getElementById('modalTimeline');
+    const modalRevisions = document.getElementById('modalRevisions');
+    const modalDeliverables = document.getElementById('modalDeliverables');
+    const modalSpecs = document.getElementById('modalSpecs');
+    const modalQuoteBtn = document.getElementById('modalQuoteBtn');
+
+    document.querySelectorAll('.service-card').forEach(card => {
+      const detailBtn = card.querySelector('.btn-details');
+      if (!detailBtn) return;
+
+      detailBtn.addEventListener('click', e => {
+        e.preventDefault();
+        const service = card.getAttribute('data-service');
+        const price = card.getAttribute('data-price');
+        const desc = card.getAttribute('data-desc');
+        const timeline = card.getAttribute('data-timeline');
+        const revisions = card.getAttribute('data-revisions');
+        const deliverables = card.getAttribute('data-deliverables');
+        const specs = card.getAttribute('data-specs');
+
+        modalTitle.textContent = service;
+        modalPrice.textContent = `STARTING FROM ${price}`;
+        modalDesc.textContent = desc;
+        modalTimeline.textContent = timeline;
+        modalRevisions.textContent = revisions;
+        modalDeliverables.textContent = deliverables;
+        modalSpecs.textContent = specs;
+        modalQuoteBtn.href = `mailto:contact@antitexture.com?subject=Inquiry:%20${encodeURIComponent(service)}`;
+
+        serviceModal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+      });
+    });
+
+    function closeModal() {
+      serviceModal.classList.remove('active');
+      if (!navOverlay.classList.contains('active')) {
+        document.body.style.overflow = '';
+      }
+    }
+
+    modalClose.addEventListener('click', closeModal);
+    serviceModal.addEventListener('click', e => {
+      if (e.target === serviceModal) closeModal();
+    });
+
+    /* ==========================================================================
+       6. GSAP + SCROLLTRIGGER ANIMATIONS
+       ========================================================================== */
+    if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
+      gsap.registerPlugin(ScrollTrigger);
+
+      gsap.fromTo('.hero__headline',
+        { opacity: 0, y: 50, scale: 0.98 },
+        {
+          opacity: 1,
+          y: 0,
+          scale: 1,
+          duration: 1.1,
+          ease: 'power4.out',
+          delay: 0.2
+        }
+      );
+
+      gsap.utils.toArray('.reveal').forEach(el => {
+        gsap.fromTo(el,
+          { opacity: 0, y: 35 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.8,
+            ease: 'power3.out',
+            scrollTrigger: {
+              trigger: el,
+              start: 'top 90%',
+              toggleActions: 'play none none none'
+            }
+          }
+        );
+      });
+
+      gsap.fromTo('.service-card',
+        { opacity: 0, y: 45 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.75,
+          stagger: 0.1,
+          ease: 'power3.out',
+          scrollTrigger: {
+            trigger: '.services-grid',
+            start: 'top 85%',
+            toggleActions: 'play none none none'
+          }
+        }
+      );
+
+      gsap.fromTo('.work-card',
+        { opacity: 0, y: 45 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.75,
+          stagger: 0.12,
+          ease: 'power3.out',
+          scrollTrigger: {
+            trigger: '.work-grid',
+            start: 'top 85%',
+            toggleActions: 'play none none none'
+          }
+        }
+      );
+
+      gsap.utils.toArray('.type-in').forEach(el => {
+        const fullText = el.getAttribute('data-text') || el.textContent;
+        el.textContent = '';
+
+        ScrollTrigger.create({
+          trigger: el,
+          start: 'top 92%',
+          once: true,
+          onEnter: () => {
+            let index = 0;
+            const timer = setInterval(() => {
+              el.textContent = fullText.slice(0, index + 1);
+              index++;
+              if (index >= fullText.length) clearInterval(timer);
+            }, 55);
+          }
+        });
+      });
+    }
+  </script>
+</body>
+</html>
 
