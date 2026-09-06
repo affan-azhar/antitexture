@@ -6,19 +6,25 @@
   <title>AntiTexture — Premium AI Creative Studio</title>
   <meta name="description" content="AntiTexture is a premium Pakistan-based AI creative studio delivering websites, visuals, video, and virtual models worldwide." />
 
-  <!-- Google Fonts: Anton (Headlines), Space Mono (Meta/Technical/Prices), Inter (Body), Playfair Display (Wordmark) -->
+  <!-- Favicon Assets -->
+  <link rel="icon" type="image/svg+xml" href="/assets/icon-mark.svg" />
+  <link rel="apple-touch-icon" href="/assets/icon-mark.svg" />
+
+  <!-- Fontshare: Clash Display (600, 700) & General Sans (400, 500, 600) -->
+  <link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=clash-display@600,700&f[]=general-sans@400,500,600&display=swap" />
+
+  <!-- Google Fonts: Space Mono (Meta, Pricing, Technical, Timestamps) & Inter (Fallback) -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@1,700&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" />
 
   <style>
     /* ==========================================================================
-       RESET & THEME SYSTEM
-       Palette:
-         - Background base:      #0A0A0A
-         - Foreground text:      #F5F5F5
-         - Secondary / Muted:    #8A8A8A
-         - Accent (spotlight):   #C8956D
+       01. RESET & COLOR PALETTE SYSTEM
+       - Background base:       #0A0A0A
+       - Primary text:          #F5F5F5
+       - Secondary / Muted:     #8A8A8A (with #A0A0A0 for optimal reading contrast)
+       - Accent:                #C8956D (used strictly as spotlight)
        ========================================================================== */
     *, *::before, *::after {
       margin: 0;
@@ -30,10 +36,11 @@
       --bg: #0A0A0A;
       --fg: #F5F5F5;
       --muted: #8A8A8A;
+      --muted-bright: #9E9E9E;
       --accent: #C8956D;
+      --accent-glow: rgba(200, 149, 109, 0.12);
       --border-subtle: rgba(255, 255, 255, 0.08);
-      --card-bg: rgba(255, 255, 255, 0.02);
-      --card-hover-glow: rgba(200, 149, 109, 0.12);
+      --card-bg: rgba(18, 18, 18, 0.65);
     }
 
     html {
@@ -44,17 +51,18 @@
     }
 
     body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-family: 'General Sans', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: 15.5px;
+      line-height: 1.65;
       background-color: var(--bg);
       color: var(--fg);
       cursor: none;
       overflow-x: hidden;
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
-      line-height: 1.6;
     }
 
-    /* Keep native cursor on touch / mobile devices */
+    /* Mobile and Touch Fallback */
     @media (hover: none) and (pointer: coarse), (max-width: 768px) {
       body, a, button, input, select, textarea {
         cursor: auto !important;
@@ -79,46 +87,82 @@
       color: inherit;
     }
 
-    /* Container Utility */
+    img {
+      display: block;
+      max-width: 100%;
+    }
+
     .container {
       width: 100%;
-      max-width: 1440px;
+      max-width: 1400px;
       margin: 0 auto;
       padding: 0 clamp(20px, 4vw, 64px);
+      position: relative;
+      z-index: 10;
     }
 
     /* ==========================================================================
-       TYPOGRAPHY
+       02. BACKGROUND TEXTURE (TACTILE FILM-GRAIN & DOT-GRID)
+       Subtle SVG noise + faint radial dot grid fixed behind all content
+       ========================================================================== */
+    .bg-grain {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+      opacity: 0.055; /* ~5.5% subtle tactile film grain */
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 300 300' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+    }
+
+    .bg-grid {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 2;
+      opacity: 0.08; /* ~8% faint grid dots */
+      background-image: radial-gradient(rgba(255, 255, 255, 0.45) 1px, transparent 1px);
+      background-size: 24px 24px;
+    }
+
+    /* ==========================================================================
+       03. TYPOGRAPHY (HIGH LEGIBILITY, NORMAL TRACKING)
+       - Headlines: Clash Display, weights 600-700, normal tracking
+       - Body: General Sans, 15-16px, line-height 1.6-1.65
+       - Meta: Space Mono, uppercase, letter-spaced
        ========================================================================== */
     .font-headline {
-      font-family: 'Anton', sans-serif;
+      font-family: 'Clash Display', -apple-system, sans-serif;
+      font-weight: 700;
+      letter-spacing: 0; /* Strict normal tracking to ensure legibility */
+      line-height: 1.05;
       text-transform: uppercase;
-      letter-spacing: -2px;
-      line-height: 0.9;
-      font-weight: 400;
     }
 
     .font-mono {
       font-family: 'Space Mono', monospace;
       font-size: 11px;
-      text-transform: uppercase;
       letter-spacing: 2.5px;
+      text-transform: uppercase;
       color: var(--muted);
       line-height: 1.4;
     }
 
     .font-body {
-      font-family: 'Inter', sans-serif;
-      font-size: 14px;
-      line-height: 1.7;
-      color: var(--muted);
+      font-family: 'General Sans', 'Inter', -apple-system, sans-serif;
+      font-size: 15.5px;
+      line-height: 1.65;
+      color: var(--muted-bright);
     }
 
     /* ==========================================================================
-       CUSTOM CURSOR
-       - 8px camel dot (lerp ~0.15)
-       - 32px thin white ring (lerp ~0.08)
-       - On hover: ring scales to 50px, solid camel border, dot hidden
+       04. CUSTOM CURSOR (RESPONSIVENESS FIXED)
+       - 8px camel dot: near-zero lag (lerp ~0.5)
+       - 32px thin white ring: slight trailing lag (lerp ~0.25)
+       - Hover state: 50px ring, solid camel border, dot hidden
        ========================================================================== */
     .cursor-dot {
       position: fixed;
@@ -131,12 +175,12 @@
       pointer-events: none;
       z-index: 100001;
       transform: translate(-50%, -50%);
-      transition: opacity 0.2s ease, transform 0.15s ease;
+      transition: opacity 0.15s ease, transform 0.15s ease;
       will-change: left, top;
     }
     .cursor-dot.hidden {
       opacity: 0;
-      transform: translate(-50%, -50%) scale(0.3);
+      transform: translate(-50%, -50%) scale(0.2);
     }
 
     .cursor-ring {
@@ -150,26 +194,24 @@
       pointer-events: none;
       z-index: 100000;
       transform: translate(-50%, -50%);
-      transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1),
-                  height 0.3s cubic-bezier(0.16, 1, 0.3, 1),
-                  border-color 0.25s ease,
-                  border-width 0.25s ease,
-                  background-color 0.25s ease,
-                  opacity 0.2s ease;
+      transition: width 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+                  height 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+                  border-color 0.2s ease,
+                  border-width 0.2s ease,
+                  background-color 0.2s ease;
       will-change: left, top;
     }
     .cursor-ring.hover {
-      width: 52px;
-      height: 52px;
+      width: 50px;
+      height: 50px;
       border-color: var(--accent);
       border-width: 1.5px;
-      background: rgba(200, 149, 109, 0.04);
+      background: rgba(200, 149, 109, 0.05);
     }
 
     /* ==========================================================================
-       TOP BAR (HERO HEADER)
-       Meta row: "LOCAL / [live clock] PKT" left, centered icon mark + wordmark,
-       camel dot nav trigger right.
+       05. TOP BAR & BRAND ASSET LOCKUPS
+       Reference /assets/logo-full.svg and /assets/icon-mark.svg
        ========================================================================== */
     .top-bar {
       position: fixed;
@@ -181,21 +223,20 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      pointer-events: auto;
-      background: linear-gradient(to bottom, rgba(10, 10, 10, 0.85) 0%, rgba(10, 10, 10, 0) 100%);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
+      background: linear-gradient(to bottom, rgba(10, 10, 10, 0.9) 0%, rgba(10, 10, 10, 0) 100%);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
     }
 
     .top-bar__left {
-      font-family: 'Space Mono', monospace;
-      font-size: 11px;
-      letter-spacing: 2.5px;
-      color: var(--muted);
-      text-transform: uppercase;
       display: flex;
       align-items: center;
       gap: 6px;
+      font-family: 'Space Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 2px;
+      color: var(--muted);
+      text-transform: uppercase;
     }
     .top-bar__left .clock-val {
       color: var(--fg);
@@ -208,46 +249,25 @@
       transform: translateX(-50%);
       display: flex;
       align-items: center;
-      gap: 10px;
     }
 
-    /* Wordmark + Broken Circle Icon Mark */
-    .brand-logo {
+    .brand-link {
       display: inline-flex;
       align-items: center;
-      gap: 10px;
-      color: var(--fg);
-      text-decoration: none;
+      gap: 12px;
     }
-    .icon-mark {
-      width: 18px;
-      height: 18px;
-      display: inline-block;
-      color: var(--accent);
-      flex-shrink: 0;
-      transition: transform 0.4s ease;
+    .brand-link img.logo-img {
+      height: 32px;
+      width: auto;
+      object-fit: contain;
+      filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.4));
+      transition: transform 0.3s ease;
     }
-    .brand-logo:hover .icon-mark {
-      transform: rotate(15deg) scale(1.1);
-    }
-    .icon-mark svg {
-      width: 100%;
-      height: 100%;
-      display: block;
+    .brand-link:hover img.logo-img {
+      transform: scale(1.03);
     }
 
-    .wordmark__text {
-      font-family: 'Playfair Display', Georgia, serif;
-      font-weight: 700;
-      font-style: italic;
-      font-size: 18px;
-      letter-spacing: -0.3px;
-      color: var(--fg);
-      line-height: 1;
-      display: inline-block;
-    }
-
-    /* Camel dot nav trigger button */
+    /* Navigation Trigger Button */
     .nav-trigger-wrapper {
       display: flex;
       align-items: center;
@@ -259,8 +279,8 @@
       letter-spacing: 2px;
       color: var(--muted);
       opacity: 0;
-      transform: translateX(6px);
-      transition: opacity 0.25s ease, transform 0.25s ease;
+      transform: translateX(4px);
+      transition: opacity 0.25s ease, transform 0.25s ease, color 0.25s ease;
     }
     .nav-trigger-wrapper:hover .nav-trigger-hint {
       opacity: 1;
@@ -269,15 +289,12 @@
     }
 
     .nav-trigger {
-      width: 14px;
-      height: 14px;
+      width: 20px;
+      height: 20px;
       padding: 0;
-      border: none;
-      background: transparent;
       display: flex;
       align-items: center;
       justify-content: center;
-      position: relative;
     }
     .nav-trigger__dot {
       width: 10px;
@@ -285,44 +302,105 @@
       background-color: var(--accent);
       border-radius: 50%;
       transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
-      box-shadow: 0 0 12px rgba(200, 149, 109, 0.35);
+      box-shadow: 0 0 10px rgba(200, 149, 109, 0.4);
     }
     .nav-trigger:hover .nav-trigger__dot {
       transform: scale(1.4);
-      box-shadow: 0 0 18px rgba(200, 149, 109, 0.7);
+      box-shadow: 0 0 18px rgba(200, 149, 109, 0.75);
     }
 
     /* ==========================================================================
-       FULL-SCREEN NAVIGATION OVERLAY
+       06. NAVIGATION OVERLAY: TORN FABRIC REVEAL & EDITORIAL PREVIEWS
+       - Jagged / irregular clip-path torn fabric animation
+       - Editorial preview swatches on link hover
        ========================================================================== */
     .nav-overlay {
       position: fixed;
       inset: 0;
-      background: rgba(10, 10, 10, 0.98);
-      backdrop-filter: blur(28px);
-      -webkit-backdrop-filter: blur(28px);
+      background: #080808;
       z-index: 99999;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      padding: clamp(24px, 4vw, 64px);
-      opacity: 0;
+      padding: clamp(28px, 4vw, 64px);
       visibility: hidden;
       pointer-events: none;
-      transition: opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1),
-                  visibility 0.45s ease;
+      /* Initial closed state: collapsed to top-right corner */
+      clip-path: polygon(100% 0%, 100% 0%, 100% 0%, 100% 0%, 100% 0%, 100% 0%, 100% 0%, 100% 0%);
+      transition: visibility 0.6s ease;
     }
+
+    /* Active: Jagged torn fabric rip opens across the viewport */
     .nav-overlay.active {
-      opacity: 1;
       visibility: visible;
       pointer-events: auto;
+      animation: tornFabricOpen 0.65s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+
+    /* Closing: Jagged rip tears back */
+    .nav-overlay.closing {
+      visibility: visible;
+      pointer-events: auto;
+      animation: tornFabricClose 0.55s cubic-bezier(0.7, 0, 0.84, 0) forwards;
+    }
+
+    @keyframes tornFabricOpen {
+      0% {
+        clip-path: polygon(
+          100% 0%, 100% 0%, 100% 0%, 100% 0%, 
+          100% 0%, 100% 0%, 100% 0%, 100% 0%, 
+          100% 0%, 100% 0%, 100% 0%, 100% 0%
+        );
+      }
+      35% {
+        clip-path: polygon(
+          100% 0%, 85% 0%, 88% 12%, 72% 20%, 78% 32%, 
+          60% 42%, 68% 54%, 50% 64%, 56% 76%, 38% 88%, 
+          42% 100%, 100% 100%
+        );
+      }
+      70% {
+        clip-path: polygon(
+          100% 0%, 45% 0%, 50% 12%, 30% 22%, 38% 34%, 
+          18% 46%, 24% 60%, 8% 72%, 14% 86%, 0% 95%, 
+          0% 100%, 100% 100%
+        );
+      }
+      100% {
+        clip-path: polygon(
+          100% 0%, 0% 0%, 0% 12%, 0% 22%, 0% 34%, 
+          0% 46%, 0% 60%, 0% 72%, 0% 86%, 0% 95%, 
+          0% 100%, 100% 100%
+        );
+      }
+    }
+
+    @keyframes tornFabricClose {
+      0% {
+        clip-path: polygon(
+          100% 0%, 0% 0%, 0% 100%, 100% 100%
+        );
+      }
+      40% {
+        clip-path: polygon(
+          100% 0%, 55% 0%, 62% 14%, 48% 28%, 56% 40%, 
+          40% 55%, 48% 70%, 32% 85%, 38% 100%, 100% 100%
+        );
+      }
+      100% {
+        clip-path: polygon(
+          100% 0%, 100% 0%, 100% 0%, 100% 0%, 
+          100% 0%, 100% 0%, 100% 0%, 100% 0%
+        );
+      }
     }
 
     .nav-overlay__header {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      width: 100%;
+      position: relative;
+      z-index: 10;
     }
 
     .nav-overlay__close {
@@ -334,7 +412,7 @@
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      padding: 8px 0;
+      padding: 8px;
       transition: color 0.25s ease;
     }
     .nav-overlay__close:hover {
@@ -343,42 +421,43 @@
 
     .nav-overlay__body {
       flex: 1;
-      display: flex;
+      display: grid;
+      grid-template-columns: 1fr 340px;
       align-items: center;
-      justify-content: center;
-      margin: 40px 0;
+      gap: 60px;
+      max-width: 1200px;
+      margin: 20px auto;
+      width: 100%;
     }
 
     .nav-links {
       list-style: none;
       display: flex;
       flex-direction: column;
-      gap: clamp(12px, 2.5vh, 24px);
-      width: 100%;
-      max-width: 900px;
+      gap: clamp(14px, 2.5vh, 26px);
     }
 
     .nav-links li {
       display: flex;
       align-items: baseline;
-      gap: clamp(16px, 3vw, 36px);
+      gap: clamp(14px, 2.5vw, 32px);
       opacity: 0;
-      transform: translateY(35px);
+      transform: translateY(28px);
       transition: opacity 0.45s ease, transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
     }
     .nav-overlay.active .nav-links li {
       opacity: 1;
       transform: translateY(0);
     }
-    .nav-overlay.active .nav-links li:nth-child(1) { transition-delay: 0.10s; }
-    .nav-overlay.active .nav-links li:nth-child(2) { transition-delay: 0.16s; }
-    .nav-overlay.active .nav-links li:nth-child(3) { transition-delay: 0.22s; }
-    .nav-overlay.active .nav-links li:nth-child(4) { transition-delay: 0.28s; }
-    .nav-overlay.active .nav-links li:nth-child(5) { transition-delay: 0.34s; }
+    .nav-overlay.active .nav-links li:nth-child(1) { transition-delay: 0.15s; }
+    .nav-overlay.active .nav-links li:nth-child(2) { transition-delay: 0.22s; }
+    .nav-overlay.active .nav-links li:nth-child(3) { transition-delay: 0.29s; }
+    .nav-overlay.active .nav-links li:nth-child(4) { transition-delay: 0.36s; }
+    .nav-overlay.active .nav-links li:nth-child(5) { transition-delay: 0.43s; }
 
     .nav-links__num {
       font-family: 'Space Mono', monospace;
-      font-size: clamp(12px, 1.4vw, 15px);
+      font-size: 13px;
       letter-spacing: 2px;
       color: var(--accent);
       font-weight: 700;
@@ -387,21 +466,93 @@
     }
 
     .nav-links__text {
-      font-family: 'Anton', sans-serif;
-      font-size: clamp(42px, 7.5vw, 100px);
+      font-family: 'Clash Display', -apple-system, sans-serif;
+      font-weight: 700;
+      letter-spacing: 0;
+      font-size: clamp(38px, 6vw, 76px);
       text-transform: uppercase;
-      letter-spacing: -1.5px;
-      line-height: 1;
+      line-height: 1.05;
       color: var(--fg);
       transition: color 0.25s ease, transform 0.25s ease;
       display: inline-block;
     }
     .nav-links__text:hover {
       color: var(--accent);
-      transform: translateX(12px);
+      transform: translateX(10px);
     }
-    .nav-links li.active .nav-links__text {
-      color: var(--accent);
+
+    /* Editorial Swatch / Thumbnail Preview Panel */
+    .nav-preview-box {
+      border: 1px solid var(--border-subtle);
+      background: #0E0E0E;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      box-shadow: 0 16px 40px var(--accent-glow);
+    }
+    .nav-preview-viewport {
+      width: 100%;
+      aspect-ratio: 4/3;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      position: relative;
+      overflow: hidden;
+      background: #141210;
+    }
+    .nav-swatch {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      transform: scale(0.95);
+      transition: opacity 0.35s ease, transform 0.35s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .nav-swatch.active {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    /* Generative preview swatches */
+    .nav-swatch--studio {
+      background:
+        repeating-linear-gradient(45deg, rgba(200, 149, 109, 0.3) 0px, rgba(200, 149, 109, 0.3) 2px, transparent 2px, transparent 10px),
+        repeating-linear-gradient(-45deg, rgba(245, 245, 245, 0.15) 0px, rgba(245, 245, 245, 0.15) 2px, transparent 2px, transparent 10px),
+        #111;
+    }
+    .nav-swatch--approach {
+      background:
+        radial-gradient(circle at center, rgba(200, 149, 109, 0.4) 0%, transparent 60%),
+        repeating-linear-gradient(0deg, rgba(255,255,255,0.06) 0px, rgba(255,255,255,0.06) 1px, transparent 1px, transparent 16px),
+        #111;
+    }
+    .nav-swatch--services {
+      background:
+        radial-gradient(ellipse at top right, rgba(200, 149, 109, 0.35) 0%, transparent 70%),
+        linear-gradient(135deg, #1A1612 0%, #0D0D0E 100%);
+    }
+    .nav-swatch--work {
+      background:
+        radial-gradient(circle at bottom left, rgba(200, 149, 109, 0.4) 0%, transparent 60%),
+        repeating-linear-gradient(90deg, rgba(255,255,255,0.05) 0px, rgba(255,255,255,0.05) 1px, transparent 1px, transparent 20px),
+        #141416;
+    }
+    .nav-swatch--contact {
+      background:
+        radial-gradient(circle at center, rgba(200, 149, 109, 0.5) 0%, rgba(10,10,10,0.9) 70%),
+        #0A0A0A;
+    }
+
+    .nav-preview-caption {
+      font-family: 'Space Mono', monospace;
+      font-size: 10.5px;
+      letter-spacing: 2px;
+      color: var(--muted-bright);
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
     }
 
     .nav-overlay__footer {
@@ -409,22 +560,23 @@
       align-items: center;
       justify-content: space-between;
       border-top: 1px solid var(--border-subtle);
-      padding-top: 24px;
+      padding-top: 20px;
       font-family: 'Space Mono', monospace;
       font-size: 10px;
       letter-spacing: 2px;
       color: var(--muted);
       text-transform: uppercase;
     }
-    .nav-overlay__footer a {
-      color: var(--muted);
-    }
     .nav-overlay__footer a:hover {
       color: var(--accent);
     }
 
     /* ==========================================================================
-       SECTION 1: HERO
+       07. SECTION 1: HERO & SIGNATURE CURSOR-REVEALED TEXTURE
+       Layered Z-Index:
+         1. Grain & dot grid (z-index: 1, 2)
+         2. Texture-reveal layer (z-index: 4)
+         3. Headline & content (z-index: 10)
        ========================================================================== */
     .hero {
       position: relative;
@@ -432,24 +584,41 @@
       display: flex;
       flex-direction: column;
       justify-content: center;
-      padding-top: 120px;
-      padding-bottom: 60px;
+      padding-top: 130px;
+      padding-bottom: 70px;
       overflow: hidden;
-      background: radial-gradient(circle at 50% 40%, rgba(200, 149, 109, 0.035) 0%, transparent 70%), var(--bg);
+      background: radial-gradient(circle at 50% 45%, rgba(200, 149, 109, 0.035) 0%, transparent 70%), var(--bg);
     }
 
-    .hero-canvas {
+    /* Signature Interaction: Cursor-Revealed Woven Texture */
+    .hero-revealed-texture {
       position: absolute;
       inset: 0;
       width: 100%;
       height: 100%;
-      z-index: 1;
+      z-index: 4;
       pointer-events: none;
+      background-color: #12100E;
+      /* Rich woven interlaced textile thread pattern */
+      background-image:
+        repeating-linear-gradient(45deg, rgba(200, 149, 109, 0.18) 0px, rgba(200, 149, 109, 0.18) 2px, transparent 2px, transparent 8px),
+        repeating-linear-gradient(-45deg, rgba(245, 245, 245, 0.10) 0px, rgba(245, 245, 245, 0.10) 2px, transparent 2px, transparent 8px),
+        repeating-linear-gradient(0deg, rgba(200, 149, 109, 0.08) 0px, rgba(200, 149, 109, 0.08) 1px, transparent 1px, transparent 4px),
+        repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.05) 0px, rgba(255, 255, 255, 0.05) 1px, transparent 1px, transparent 4px);
+      background-size: 16px 16px, 16px 16px, 8px 8px, 8px 8px;
+      /* Radial mask feathered edge ~180px following cursor */
+      -webkit-mask-image: radial-gradient(circle 180px at var(--reveal-x, -500px) var(--reveal-y, -500px), black 0%, rgba(0,0,0,0.85) 45%, transparent 100%);
+      mask-image: radial-gradient(circle 180px at var(--reveal-x, -500px) var(--reveal-y, -500px), black 0%, rgba(0,0,0,0.85) 45%, transparent 100%);
+      transition: opacity 0.3s ease;
+      opacity: 0;
+    }
+    .hero-revealed-texture.active {
+      opacity: 1;
     }
 
     .hero__content {
       position: relative;
-      z-index: 2;
+      z-index: 10;
       display: flex;
       flex-direction: column;
     }
@@ -458,10 +627,9 @@
       display: inline-flex;
       align-items: center;
       gap: 12px;
-      margin-bottom: 28px;
+      margin-bottom: 24px;
     }
     .hero__meta-tag {
-      display: inline-block;
       padding: 4px 10px;
       border: 1px solid rgba(200, 149, 109, 0.3);
       color: var(--accent);
@@ -474,37 +642,38 @@
       font-family: 'Space Mono', monospace;
       font-size: 11px;
       letter-spacing: 2px;
-      color: var(--muted);
+      color: var(--muted-bright);
       text-transform: uppercase;
     }
 
     .hero__headline {
-      font-size: clamp(52px, 12vw, 160px);
+      /* Large scale clamped 40px-110px with normal tracking so it never clips */
+      font-size: clamp(40px, 8vw, 108px);
       color: var(--fg);
-      margin-bottom: 40px;
-      line-height: 0.88;
-      letter-spacing: -2px;
+      margin-bottom: 32px;
+      line-height: 1.02;
       user-select: none;
     }
-    .hero__headline span.highlight-stroke {
-      display: block;
+    .hero__headline .text-gold {
+      color: var(--accent);
+      font-weight: 600;
     }
 
     .hero__sub {
       display: flex;
       flex-direction: column;
-      gap: 36px;
+      gap: 32px;
     }
 
     .hero__tagline-row {
-      max-width: 650px;
-      font-size: 15px;
-      color: var(--muted);
+      max-width: 680px;
+      font-size: 16px;
+      color: var(--muted-bright);
       line-height: 1.7;
     }
     .hero__tagline-row strong {
       color: var(--fg);
-      font-weight: 500;
+      font-weight: 600;
     }
 
     .hero__stats {
@@ -513,7 +682,7 @@
       gap: 24px;
       border-top: 1px solid var(--border-subtle);
       padding-top: 28px;
-      margin-top: 12px;
+      margin-top: 8px;
     }
 
     .hero__stat {
@@ -521,7 +690,6 @@
       font-size: 11px;
       text-transform: uppercase;
       letter-spacing: 2.5px;
-      color: var(--muted);
       display: flex;
       flex-direction: column;
       gap: 4px;
@@ -537,11 +705,13 @@
     }
 
     /* ==========================================================================
-       SHARED SECTION HEADERS
+       08. STANDARDIZED SECTION HEADERS
+       "01" left, "//LABEL" center (type-in on scroll), "[RIGHT]" right
        ========================================================================== */
     section {
-      padding: clamp(90px, 12vh, 160px) 0;
+      padding: clamp(90px, 12vh, 150px) 0;
       position: relative;
+      z-index: 10;
     }
 
     .section-header {
@@ -551,7 +721,7 @@
       padding: 18px 0;
       border-top: 1px solid var(--border-subtle);
       border-bottom: 1px solid var(--border-subtle);
-      margin-bottom: clamp(48px, 6vw, 80px);
+      margin-bottom: clamp(48px, 6vw, 76px);
     }
 
     .section-header__num {
@@ -564,12 +734,12 @@
 
     .section-header__label {
       font-family: 'Space Mono', monospace;
-      font-size: 11px;
+      font-size: 11.5px;
       letter-spacing: 3px;
       color: var(--accent);
       font-weight: 700;
       text-align: center;
-      min-height: 16px;
+      min-height: 18px;
     }
 
     .section-header__right {
@@ -582,7 +752,8 @@
     }
 
     /* ==========================================================================
-       SECTION 2: APPROACH
+       09. SECTION 2: APPROACH (3-PHASE PROCESS)
+       Stacked reveal items with tags
        ========================================================================== */
     .approach-list {
       display: flex;
@@ -623,22 +794,23 @@
     }
 
     .approach-item__content {
-      max-width: 840px;
+      max-width: 860px;
     }
 
     .approach-item__title {
-      font-family: 'Anton', sans-serif;
-      font-size: clamp(32px, 4.5vw, 56px);
+      font-family: 'Clash Display', -apple-system, sans-serif;
+      font-weight: 700;
+      font-size: clamp(28px, 3.8vw, 48px);
       text-transform: uppercase;
-      letter-spacing: -1px;
-      line-height: 1;
-      margin-bottom: 20px;
+      letter-spacing: 0;
+      line-height: 1.1;
+      margin-bottom: 16px;
       color: var(--fg);
     }
 
     .approach-item__desc {
-      font-size: clamp(14px, 1.2vw, 16px);
-      color: var(--muted);
+      font-size: 15.5px;
+      color: var(--muted-bright);
       line-height: 1.75;
       margin-bottom: 20px;
     }
@@ -646,7 +818,7 @@
     .approach-item__meta {
       display: flex;
       flex-wrap: wrap;
-      gap: 12px;
+      gap: 10px;
     }
     .approach-tag {
       font-family: 'Space Mono', monospace;
@@ -659,38 +831,40 @@
     }
 
     /* ==========================================================================
-       SECTION 3: SERVICES (PRODUCT CARDS)
+       10. SECTION 3: SERVICES (3D TILT PRODUCT CARDS & DEPTH CUES)
+       - 3D tilt-on-hover following cursor
+       - Soft camel-colored drop shadows
+       - Outline "View Details" & filled camel "Get a Quote"
        ========================================================================== */
     .services-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 28px;
+      perspective: 1000px; /* Enable 3D tilt space */
     }
 
     .service-card {
       background: var(--card-bg);
-      border: 1px solid rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.06);
       padding: clamp(28px, 3vw, 36px) 28px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      min-height: 380px;
+      min-height: 400px;
       position: relative;
-      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
-                  border-color 0.4s ease,
-                  box-shadow 0.4s ease,
-                  background-color 0.4s ease;
+      transform-style: preserve-3d;
+      will-change: transform;
+      box-shadow: 0 12px 36px rgba(0, 0, 0, 0.7), 0 4px 18px var(--accent-glow);
+      transition: border-color 0.35s ease, box-shadow 0.35s ease;
     }
     .service-card:hover {
-      transform: translateY(-4px);
       border-color: var(--accent);
-      box-shadow: 0 16px 48px var(--card-hover-glow);
-      background: rgba(255, 255, 255, 0.03);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.9), 0 8px 32px rgba(200, 149, 109, 0.22);
     }
 
     .service-card__badge {
       font-family: 'Space Mono', monospace;
-      font-size: 9px;
+      font-size: 9.5px;
       letter-spacing: 2px;
       color: var(--accent);
       text-transform: uppercase;
@@ -699,18 +873,19 @@
     }
 
     .service-card__name {
-      font-family: 'Anton', sans-serif;
-      font-size: clamp(22px, 2vw, 26px);
+      font-family: 'Clash Display', -apple-system, sans-serif;
+      font-weight: 700;
+      font-size: clamp(22px, 1.8vw, 27px);
       text-transform: uppercase;
-      letter-spacing: -0.5px;
+      letter-spacing: 0;
       color: var(--fg);
-      line-height: 1.1;
+      line-height: 1.15;
       margin-bottom: 14px;
     }
 
     .service-card__desc {
-      font-size: 13.5px;
-      color: var(--muted);
+      font-size: 14.5px;
+      color: var(--muted-bright);
       line-height: 1.65;
       margin-bottom: 28px;
       flex: 1;
@@ -733,16 +908,17 @@
       text-transform: uppercase;
     }
 
+    /* Terminal-style Space Mono bold price tag */
     .service-card__price {
       font-family: 'Space Mono', monospace;
-      font-size: 30px;
+      font-size: 28px;
       font-weight: 700;
       color: var(--fg);
-      letter-spacing: -1px;
+      letter-spacing: -0.5px;
     }
     .service-card__price span.curr {
       color: var(--accent);
-      font-size: 20px;
+      font-size: 19px;
       margin-right: 2px;
     }
 
@@ -754,7 +930,7 @@
 
     .btn-outline {
       padding: 12px 14px;
-      border: 1px solid rgba(255, 255, 255, 0.16);
+      border: 1px solid rgba(255, 255, 255, 0.18);
       background: transparent;
       color: var(--fg);
       font-family: 'Space Mono', monospace;
@@ -770,7 +946,7 @@
     .btn-outline:hover {
       border-color: var(--accent);
       color: var(--accent);
-      transform: translateY(-1px);
+      transform: translateY(-2px);
     }
 
     .btn-filled {
@@ -792,19 +968,19 @@
     .btn-filled:hover {
       background: transparent;
       color: var(--accent);
-      transform: translateY(-1px);
-      box-shadow: 0 4px 18px rgba(200, 149, 109, 0.25);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(200, 149, 109, 0.3);
     }
 
     /* ==========================================================================
-       SERVICE DETAILS MODAL
+       11. SERVICE DETAILS MODAL
        ========================================================================== */
     .modal-backdrop {
       position: fixed;
       inset: 0;
-      background: rgba(10, 10, 10, 0.94);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
+      background: rgba(8, 8, 8, 0.94);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
       z-index: 100000;
       display: flex;
       align-items: center;
@@ -822,15 +998,15 @@
     }
 
     .modal-window {
-      background: #0E0E0E;
-      border: 1px solid rgba(200, 149, 109, 0.3);
+      background: #111111;
+      border: 1px solid rgba(200, 149, 109, 0.35);
       width: 100%;
       max-width: 680px;
       padding: clamp(28px, 4vw, 48px);
       position: relative;
-      transform: translateY(30px) scale(0.98);
+      transform: translateY(24px) scale(0.98);
       transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-      box-shadow: 0 24px 80px rgba(0, 0, 0, 0.9);
+      box-shadow: 0 24px 80px rgba(0, 0, 0, 0.9), 0 8px 30px var(--accent-glow);
     }
     .modal-backdrop.active .modal-window {
       transform: translateY(0) scale(1);
@@ -853,13 +1029,14 @@
     }
 
     .modal-title {
-      font-family: 'Anton', sans-serif;
-      font-size: clamp(28px, 4vw, 44px);
+      font-family: 'Clash Display', -apple-system, sans-serif;
+      font-weight: 700;
+      font-size: clamp(28px, 4vw, 42px);
       text-transform: uppercase;
-      letter-spacing: -1px;
+      letter-spacing: 0;
       color: var(--fg);
-      line-height: 1;
-      margin-bottom: 8px;
+      line-height: 1.1;
+      margin-bottom: 6px;
     }
 
     .modal-price-tag {
@@ -873,8 +1050,8 @@
     }
 
     .modal-desc {
-      font-size: 14.5px;
-      color: var(--muted);
+      font-size: 15px;
+      color: var(--muted-bright);
       line-height: 1.7;
       margin-bottom: 30px;
     }
@@ -902,7 +1079,7 @@
       text-transform: uppercase;
     }
     .modal-spec-val {
-      font-size: 13.5px;
+      font-size: 14px;
       color: var(--fg);
       font-weight: 500;
     }
@@ -913,13 +1090,15 @@
     }
 
     /* ==========================================================================
-       SECTION 4: WORK / CONCEPT PROJECTS
+       12. SECTION 4: WORK / CONCEPT PROJECTS
+       - Honest caption: "Studio concept work — no client projects yet"
+       - 4 project cards with tactile visuals
        ========================================================================== */
     .work-disclaimer {
       font-family: 'Space Mono', monospace;
-      font-size: 11px;
+      font-size: 11.5px;
       letter-spacing: 2.5px;
-      color: var(--muted);
+      color: var(--muted-bright);
       text-transform: uppercase;
       display: flex;
       align-items: center;
@@ -942,14 +1121,15 @@
       overflow: hidden;
       background: var(--card-bg);
       border: 1px solid var(--border-subtle);
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.8), 0 4px 18px var(--accent-glow);
       transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
                   border-color 0.4s ease,
                   box-shadow 0.4s ease;
     }
     .work-card:hover {
-      transform: translateY(-4px);
-      border-color: rgba(200, 149, 109, 0.4);
-      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.8);
+      transform: translateY(-5px);
+      border-color: rgba(200, 149, 109, 0.45);
+      box-shadow: 0 24px 50px rgba(0, 0, 0, 0.95), 0 8px 30px rgba(200, 149, 109, 0.2);
     }
 
     .work-card__visual {
@@ -964,23 +1144,23 @@
 
     .work-card__visual--1 {
       background:
-        radial-gradient(ellipse at 80% 20%, rgba(200, 149, 109, 0.28) 0%, transparent 60%),
-        radial-gradient(circle at 20% 80%, rgba(30, 24, 18, 0.8) 0%, transparent 70%),
+        radial-gradient(ellipse at 80% 20%, rgba(200, 149, 109, 0.3) 0%, transparent 60%),
+        radial-gradient(circle at 20% 80%, rgba(32, 25, 18, 0.85) 0%, transparent 70%),
         linear-gradient(135deg, #18120D 0%, #0A0A0A 100%);
     }
     .work-card__visual--2 {
       background:
-        radial-gradient(circle at 50% 50%, rgba(200, 149, 109, 0.15) 0%, transparent 50%),
+        radial-gradient(circle at 50% 50%, rgba(200, 149, 109, 0.18) 0%, transparent 50%),
         linear-gradient(135deg, #101418 0%, #090B0E 60%, #050607 100%);
     }
     .work-card__visual--3 {
       background:
-        radial-gradient(circle at 75% 75%, rgba(200, 149, 109, 0.22) 0%, transparent 55%),
+        radial-gradient(circle at 75% 75%, rgba(200, 149, 109, 0.24) 0%, transparent 55%),
         linear-gradient(135deg, #14110E 0%, #1A1612 50%, #080808 100%);
     }
     .work-card__visual--4 {
       background:
-        radial-gradient(circle at 25% 25%, rgba(200, 149, 109, 0.20) 0%, transparent 50%),
+        radial-gradient(circle at 25% 25%, rgba(200, 149, 109, 0.22) 0%, transparent 50%),
         linear-gradient(135deg, #121316 0%, #181A20 50%, #0A0A0A 100%);
     }
 
@@ -989,28 +1169,25 @@
       position: absolute;
       inset: 0;
       background:
-        repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(255, 255, 255, 0.02) 3px, rgba(255, 255, 255, 0.02) 4px),
-        repeating-linear-gradient(90deg, transparent, transparent 3px, rgba(200, 149, 109, 0.02) 3px, rgba(200, 149, 109, 0.02) 4px);
+        repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(255, 255, 255, 0.025) 3px, rgba(255, 255, 255, 0.025) 4px),
+        repeating-linear-gradient(90deg, transparent, transparent 3px, rgba(200, 149, 109, 0.025) 3px, rgba(200, 149, 109, 0.025) 4px);
       pointer-events: none;
-      transition: opacity 0.4s ease;
-    }
-    .work-card:hover .work-card__visual::before {
-      opacity: 0.8;
     }
 
     .work-card__watermark {
-      font-family: 'Anton', sans-serif;
-      font-size: clamp(38px, 6vw, 76px);
+      font-family: 'Clash Display', -apple-system, sans-serif;
+      font-weight: 700;
+      letter-spacing: 0;
+      font-size: clamp(36px, 5vw, 68px);
       text-transform: uppercase;
-      letter-spacing: -1px;
-      color: rgba(255, 255, 255, 0.05);
+      color: rgba(255, 255, 255, 0.06);
       position: absolute;
       user-select: none;
-      transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), color 0.4s ease;
+      transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), color 0.4s ease;
     }
     .work-card:hover .work-card__watermark {
-      transform: scale(1.05);
-      color: rgba(200, 149, 109, 0.12);
+      transform: scale(1.06);
+      color: rgba(200, 149, 109, 0.16);
     }
 
     .work-card__info {
@@ -1022,12 +1199,13 @@
     }
 
     .work-card__title {
-      font-family: 'Anton', sans-serif;
+      font-family: 'Clash Display', -apple-system, sans-serif;
+      font-weight: 700;
       font-size: 22px;
       text-transform: uppercase;
-      letter-spacing: -0.5px;
+      letter-spacing: 0;
       color: var(--fg);
-      line-height: 1.1;
+      line-height: 1.15;
       margin-bottom: 4px;
     }
 
@@ -1036,7 +1214,7 @@
       font-size: 10px;
       letter-spacing: 2px;
       text-transform: uppercase;
-      color: var(--muted);
+      color: var(--muted-bright);
     }
 
     .work-card__tag {
@@ -1044,20 +1222,20 @@
       font-size: 10px;
       letter-spacing: 1.5px;
       color: var(--accent);
-      border: 1px solid rgba(200, 149, 109, 0.3);
+      border: 1px solid rgba(200, 149, 109, 0.35);
       padding: 4px 10px;
       text-transform: uppercase;
     }
 
     /* ==========================================================================
-       SECTION 5: CONTACT / CTA & FOOTER
+       13. SECTION 5: CONTACT / CTA & FOOTER
        ========================================================================== */
     .contact {
       text-align: center;
-      padding: clamp(100px, 14vh, 200px) 0 clamp(60px, 8vh, 100px);
+      padding: clamp(100px, 14vh, 180px) 0 clamp(60px, 8vh, 100px);
       position: relative;
       overflow: hidden;
-      background: radial-gradient(circle at 50% 60%, rgba(200, 149, 109, 0.04) 0%, transparent 65%);
+      background: radial-gradient(circle at 50% 60%, rgba(200, 149, 109, 0.05) 0%, transparent 65%);
     }
 
     .contact__pre {
@@ -1066,23 +1244,23 @@
       letter-spacing: 3px;
       color: var(--accent);
       text-transform: uppercase;
-      margin-bottom: 24px;
+      margin-bottom: 20px;
       display: block;
     }
 
     .contact__headline {
-      font-size: clamp(52px, 11vw, 150px);
-      line-height: 0.9;
-      letter-spacing: -2px;
-      margin-bottom: 40px;
+      font-size: clamp(40px, 8vw, 104px);
+      line-height: 1.05;
+      letter-spacing: 0;
+      margin-bottom: 32px;
       color: var(--fg);
     }
 
     .contact__sub {
-      max-width: 540px;
-      margin: 0 auto 48px;
-      font-size: 15px;
-      color: var(--muted);
+      max-width: 580px;
+      margin: 0 auto 44px;
+      font-size: 16px;
+      color: var(--muted-bright);
       line-height: 1.7;
     }
 
@@ -1090,7 +1268,7 @@
       display: inline-flex;
       align-items: center;
       gap: 14px;
-      padding: 18px 48px;
+      padding: 18px 46px;
       border: 1px solid var(--accent);
       font-family: 'Space Mono', monospace;
       font-size: 12px;
@@ -1104,7 +1282,7 @@
       background: var(--accent);
       color: var(--bg);
       transform: translateY(-2px);
-      box-shadow: 0 8px 32px rgba(200, 149, 109, 0.28);
+      box-shadow: 0 8px 30px rgba(200, 149, 109, 0.35);
     }
     .contact__btn::after {
       content: '→';
@@ -1119,7 +1297,7 @@
       border-top: 1px solid var(--border-subtle);
       padding: 44px 0;
       position: relative;
-      z-index: 2;
+      z-index: 10;
     }
 
     .footer {
@@ -1133,7 +1311,12 @@
     .footer__brand {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 14px;
+    }
+    .footer__brand img.footer-logo {
+      height: 24px;
+      width: auto;
+      object-fit: contain;
     }
     .footer__tagline {
       font-family: 'Space Mono', monospace;
@@ -1150,12 +1333,11 @@
     }
     .footer__socials a {
       font-family: 'Space Mono', monospace;
-      font-size: 10px;
+      font-size: 10.5px;
       letter-spacing: 2px;
       text-transform: uppercase;
-      color: var(--muted);
+      color: var(--muted-bright);
       transition: color 0.25s ease;
-      position: relative;
     }
     .footer__socials a:hover {
       color: var(--accent);
@@ -1171,9 +1353,12 @@
 
     .reveal {
       opacity: 0;
-      transform: translateY(35px);
+      transform: translateY(32px);
     }
 
+    /* ==========================================================================
+       14. RESPONSIVE BREAKPOINTS
+       ========================================================================== */
     @media (max-width: 1024px) {
       .services-grid {
         grid-template-columns: repeat(2, 1fr);
@@ -1181,11 +1366,17 @@
       .work-grid {
         grid-template-columns: 1fr;
       }
+      .nav-overlay__body {
+        grid-template-columns: 1fr;
+      }
+      .nav-preview-box {
+        display: none;
+      }
     }
 
     @media (max-width: 768px) {
       .hero {
-        padding-top: 100px;
+        padding-top: 110px;
       }
       .hero__stats {
         grid-template-columns: 1fr;
@@ -1210,13 +1401,13 @@
       .footer {
         flex-direction: column;
         align-items: flex-start;
-        gap: 18px;
+        gap: 20px;
       }
       .service-card__actions {
         grid-template-columns: 1fr;
       }
       .top-bar__left {
-        font-size: 9px;
+        font-size: 9.5px;
         letter-spacing: 1.5px;
       }
       .modal-specs-grid {
@@ -1227,54 +1418,67 @@
 </head>
 <body>
 
-  <!-- Custom Cursor System -->
+  <!-- Tactile Background Texture Layers (Fixed Behind All Content) -->
+  <div class="bg-grain" aria-hidden="true"></div>
+  <div class="bg-grid" aria-hidden="true"></div>
+
+  <!-- Custom Cursor -->
   <div class="cursor-dot" id="cursorDot"></div>
   <div class="cursor-ring" id="cursorRing"></div>
 
-  <!-- Full-Screen Navigation Overlay -->
+  <!-- Full-Screen Navigation Overlay (Torn Fabric Reveal) -->
   <nav class="nav-overlay" id="navOverlay" aria-label="Main Navigation">
     <div class="nav-overlay__header">
-      <div class="brand-logo">
-        <span class="icon-mark">
-          <svg viewBox="0 0 36 36" fill="currentColor">
-            <path d="M 19.5 5.5 L 17 14 L 28.5 14.2 A 13.5 13.5 0 1 1 19.5 5.5 Z" />
-            <path d="M 23.5 1.5 L 21 10 L 32.5 10.2 A 13.5 13.5 0 0 0 23.5 1.5 Z" />
-          </svg>
-        </span>
-        <span class="wordmark__text">AntiTexture</span>
-      </div>
+      <a href="#hero" class="brand-link" onclick="closeNav()">
+        <img src="/assets/logo-full.svg" alt="AntiTexture" class="logo-img" onerror="if(!this.dataset.retried){this.dataset.retried=1;this.src='assets/logo-full.svg';}" />
+      </a>
       <button class="nav-overlay__close" id="navClose" aria-label="Close navigation">
-        <span>// CLOSE</span>
+        <span>// CLOSE [ESC]</span>
       </button>
     </div>
 
     <div class="nav-overlay__body">
       <ul class="nav-links">
-        <li data-section="hero">
+        <li data-swatch="studio">
           <span class="nav-links__num">01</span>
           <a href="#hero" class="nav-links__text nav-link">Studio</a>
         </li>
-        <li data-section="approach">
+        <li data-swatch="approach">
           <span class="nav-links__num">02</span>
           <a href="#approach" class="nav-links__text nav-link">Approach</a>
         </li>
-        <li data-section="services">
+        <li data-swatch="services">
           <span class="nav-links__num">03</span>
           <a href="#services" class="nav-links__text nav-link">Services</a>
         </li>
-        <li data-section="work">
+        <li data-swatch="work">
           <span class="nav-links__num">04</span>
           <a href="#work" class="nav-links__text nav-link">Work</a>
         </li>
-        <li data-section="contact">
+        <li data-swatch="contact">
           <span class="nav-links__num">05</span>
           <a href="#contact" class="nav-links__text nav-link">Contact</a>
         </li>
       </ul>
+
+      <!-- Editorial Texture Preview Panel -->
+      <div class="nav-preview-box">
+        <div class="nav-preview-viewport">
+          <div class="nav-swatch nav-swatch--studio active" id="swatch-studio"></div>
+          <div class="nav-swatch nav-swatch--approach" id="swatch-approach"></div>
+          <div class="nav-swatch nav-swatch--services" id="swatch-services"></div>
+          <div class="nav-swatch nav-swatch--work" id="swatch-work"></div>
+          <div class="nav-swatch nav-swatch--contact" id="swatch-contact"></div>
+        </div>
+        <div class="nav-preview-caption">
+          <span id="previewCaption">01 // RAW WEAVE TEXTURE</span>
+          <span style="color: var(--accent);">PREVIEW</span>
+        </div>
+      </div>
     </div>
 
     <div class="nav-overlay__footer">
-      <span>Pakistan // Worldwide</span>
+      <span>PAKISTAN // WORLDWIDE</span>
       <a href="mailto:contact@antitexture.com">contact@antitexture.com</a>
     </div>
   </nav>
@@ -1286,14 +1490,8 @@
     </div>
 
     <div class="top-bar__center">
-      <a href="#hero" class="brand-logo" aria-label="AntiTexture Home">
-        <span class="icon-mark">
-          <svg viewBox="0 0 36 36" fill="currentColor">
-            <path d="M 19.5 5.5 L 17 14 L 28.5 14.2 A 13.5 13.5 0 1 1 19.5 5.5 Z" />
-            <path d="M 23.5 1.5 L 21 10 L 32.5 10.2 A 13.5 13.5 0 0 0 23.5 1.5 Z" />
-          </svg>
-        </span>
-        <span class="wordmark__text">AntiTexture</span>
+      <a href="#hero" class="brand-link" aria-label="AntiTexture Home">
+        <img src="/assets/logo-full.svg" alt="AntiTexture" class="logo-img" onerror="if(!this.dataset.retried){this.dataset.retried=1;this.src='assets/logo-full.svg';}" />
       </a>
     </div>
 
@@ -1310,7 +1508,8 @@
          SECTION 1: HERO
          ======================================================================== -->
     <section class="hero" id="hero">
-      <canvas class="hero-canvas" id="heroCanvas"></canvas>
+      <!-- Signature Cursor-Revealed Woven Fabric Texture Layer (Peeling Back Black) -->
+      <div class="hero-revealed-texture" id="heroRevealedTexture" aria-hidden="true"></div>
 
       <div class="container hero__content">
         <div class="hero__meta-pill reveal">
@@ -1320,19 +1519,19 @@
 
         <h1 class="hero__headline font-headline reveal">
           PREMIUM AI<br>
-          <span class="highlight-stroke">CREATIVE STUDIO</span>
+          <span class="text-gold">CREATIVE STUDIO</span>
         </h1>
 
         <div class="hero__sub">
-          <p class="hero__tagline-row reveal">
-            <strong>AntiTexture</strong> fuses human aesthetic direction with cutting-edge generative intelligence. 
-            We engineer bespoke websites, virtual campaigns, 4K model visuals, and high-conversion video reels for forward-thinking brands.
+          <p class="hero__tagline-row reveal font-body">
+            <strong>AntiTexture</strong> unites rigorous human creative direction with algorithmic intelligence. 
+            We build high-converting websites, bespoke virtual campaigns, 4K model visuals, and motion reels for global visionaries.
           </p>
 
           <div class="hero__stats">
             <div class="hero__stat reveal">
               <span class="hero__stat-label">BASED IN PAKISTAN</span>
-              <span class="hero__stat-sub">LAHORE // ISLAMABAD HQ</span>
+              <span class="hero__stat-sub">LAHORE // ISLAMABAD</span>
             </div>
             <div class="hero__stat reveal">
               <span class="hero__stat-label">AVAILABLE WORLDWIDE</span>
@@ -1348,7 +1547,7 @@
     </section>
 
     <!-- ========================================================================
-         SECTION 2: APPROACH
+         SECTION 2: APPROACH (3-PHASE PROCESS)
          ======================================================================== -->
     <section id="approach">
       <div class="container">
@@ -1359,6 +1558,7 @@
         </div>
 
         <div class="approach-list">
+          <!-- Phase 01 -->
           <div class="approach-item reveal">
             <span class="approach-item__num">01</span>
             <div class="approach-item__content">
@@ -1374,6 +1574,7 @@
             </div>
           </div>
 
+          <!-- Phase 02 -->
           <div class="approach-item reveal">
             <span class="approach-item__num">02</span>
             <div class="approach-item__content">
@@ -1389,6 +1590,7 @@
             </div>
           </div>
 
+          <!-- Phase 03 -->
           <div class="approach-item reveal">
             <span class="approach-item__num">03</span>
             <div class="approach-item__content">
@@ -1408,7 +1610,7 @@
     </section>
 
     <!-- ========================================================================
-         SECTION 3: SERVICES (PRODUCT CARDS)
+         SECTION 3: SERVICES (PRODUCT PRICING CARDS WITH 3D TILT)
          ======================================================================== -->
     <section id="services">
       <div class="container">
@@ -1419,6 +1621,7 @@
         </div>
 
         <div class="services-grid">
+          <!-- Card 1 -->
           <div class="service-card reveal" 
                data-service="AI Model Shoots" 
                data-price="$349" 
@@ -1444,6 +1647,7 @@
             </div>
           </div>
 
+          <!-- Card 2 -->
           <div class="service-card reveal" 
                data-service="AI Fashion Reels" 
                data-price="$499" 
@@ -1469,6 +1673,7 @@
             </div>
           </div>
 
+          <!-- Card 3 -->
           <div class="service-card reveal" 
                data-service="E-Commerce Web Design" 
                data-price="$799" 
@@ -1494,6 +1699,7 @@
             </div>
           </div>
 
+          <!-- Card 4 -->
           <div class="service-card reveal" 
                data-service="Social Media Content" 
                data-price="$249" 
@@ -1519,6 +1725,7 @@
             </div>
           </div>
 
+          <!-- Card 5 -->
           <div class="service-card reveal" 
                data-service="AI Product Photography" 
                data-price="$199" 
@@ -1544,6 +1751,7 @@
             </div>
           </div>
 
+          <!-- Card 6 -->
           <div class="service-card reveal" 
                data-service="AI Video Ads" 
                data-price="$599" 
@@ -1583,9 +1791,10 @@
           <span class="section-header__right">CONCEPT PROJECTS</span>
         </div>
 
-        <p class="work-disclaimer reveal">Studio concept work — no client projects yet</p>
+        <p class="work-disclaimer reveal font-mono">Studio concept work — no client projects yet</p>
 
         <div class="work-grid">
+          <!-- Project 1 -->
           <div class="work-card reveal">
             <div class="work-card__visual work-card__visual--1">
               <span class="work-card__watermark">NOOR</span>
@@ -1599,6 +1808,7 @@
             </div>
           </div>
 
+          <!-- Project 2 -->
           <div class="work-card reveal">
             <div class="work-card__visual work-card__visual--2">
               <span class="work-card__watermark">VEIL</span>
@@ -1612,6 +1822,7 @@
             </div>
           </div>
 
+          <!-- Project 3 -->
           <div class="work-card reveal">
             <div class="work-card__visual work-card__visual--3">
               <span class="work-card__watermark">DUSK</span>
@@ -1625,6 +1836,7 @@
             </div>
           </div>
 
+          <!-- Project 4 -->
           <div class="work-card reveal">
             <div class="work-card__visual work-card__visual--4">
               <span class="work-card__watermark">MERIDIAN</span>
@@ -1642,17 +1854,17 @@
     </section>
 
     <!-- ========================================================================
-         SECTION 5: CONTACT / CTA
+         SECTION 5: CONTACT / CTA & FOOTER
          ======================================================================== -->
     <section class="contact" id="contact">
       <div class="container">
-        <span class="contact__pre reveal">// READY TO INITIATE</span>
+        <span class="contact__pre reveal font-mono">// READY TO INITIATE</span>
         <h2 class="contact__headline font-headline reveal">
           LET'S BUILD<br>SOMETHING
         </h2>
         <p class="contact__sub reveal font-body">
-          We collaborate with fashion brands, retail visionaries, and creative agencies worldwide. 
-          Tell us about your campaign goals and receive a custom generative proposal within 24 hours.
+          We collaborate with fashion labels, retail disruptors, and agencies worldwide. 
+          Brief us on your campaign vision and receive a custom generative proposal within 24 hours.
         </p>
         <div class="reveal">
           <a href="mailto:contact@antitexture.com?subject=New%20Project%20Inquiry%20%E2%80%94%20AntiTexture" class="contact__btn">
@@ -1667,13 +1879,7 @@
   <footer>
     <div class="container footer">
       <div class="footer__brand">
-        <span class="icon-mark" style="width: 14px; height: 14px;">
-          <svg viewBox="0 0 36 36" fill="currentColor">
-            <path d="M 19.5 5.5 L 17 14 L 28.5 14.2 A 13.5 13.5 0 1 1 19.5 5.5 Z" />
-            <path d="M 23.5 1.5 L 21 10 L 32.5 10.2 A 13.5 13.5 0 0 0 23.5 1.5 Z" />
-          </svg>
-        </span>
-        <span class="wordmark__text" style="font-size: 15px;">AntiTexture</span>
+        <img src="/assets/logo-full.svg" alt="AntiTexture" class="footer-logo" onerror="if(!this.dataset.retried){this.dataset.retried=1;this.src='assets/logo-full.svg';}" />
         <span class="footer__tagline">// AI CREATIVE STUDIO</span>
       </div>
 
@@ -1728,7 +1934,7 @@
 
   <script>
     /* ==========================================================================
-       1. LIVE CLOCK (Pakistan Time PKT UTC+5)
+       01. LIVE CLOCK (Pakistan Time PKT UTC+5)
        ========================================================================== */
     function updateLiveClock() {
       const clockEl = document.getElementById('liveClock');
@@ -1745,7 +1951,7 @@
     setInterval(updateLiveClock, 1000);
 
     /* ==========================================================================
-       2. CUSTOM CURSOR
+       02. CUSTOM CURSOR (TIGHT LERP FACTORS: 0.5 & 0.25)
        ========================================================================== */
     const dot = document.getElementById('cursorDot');
     const ring = document.getElementById('cursorRing');
@@ -1799,10 +2005,12 @@
     });
 
     function animateCursor() {
-      dotX += (mouseX - dotX) * 0.15;
-      dotY += (mouseY - dotY) * 0.15;
-      ringX += (mouseX - ringX) * 0.08;
-      ringY += (mouseY - ringY) * 0.08;
+      // Lerp factor ~0.5 for near-zero lag dot
+      dotX += (mouseX - dotX) * 0.50;
+      dotY += (mouseY - dotY) * 0.50;
+      // Lerp factor ~0.25 for responsive trailing ring
+      ringX += (mouseX - ringX) * 0.25;
+      ringY += (mouseY - ringY) * 0.25;
 
       dot.style.left = `${dotX}px`;
       dot.style.top = `${dotY}px`;
@@ -1814,119 +2022,74 @@
     animateCursor();
 
     /* ==========================================================================
-       3. SIGNATURE INTERACTION: HERO CANVAS CURSOR-THREAD TRAIL
+       03. SIGNATURE INTERACTION: CURSOR-REVEALED WOVEN TEXTURE
+       - Peeling back smooth black surface to reveal rich woven fabric threads
+       - Radial mask centered on cursor (~180px radius)
+       - Minimal lag lerp factor 0.38 (between 0.35 - 0.40)
        ========================================================================== */
-    const canvas = document.getElementById('heroCanvas');
-    const heroEl = document.getElementById('hero');
-    const ctx = canvas.getContext('2d');
-    let particles = [];
-    let lastSpawnX = null;
-    let lastSpawnY = null;
-    const SPACING = 15;
-    const MAX_PARTICLES = 150;
-    const LIFETIME = 800;
+    const heroTexture = document.getElementById('heroRevealedTexture');
+    const heroSection = document.getElementById('hero');
+    let revealTargetX = -500, revealTargetY = -500;
+    let revealCurrentX = -500, revealCurrentY = -500;
 
-    function resizeHeroCanvas() {
-      if (!heroEl || !canvas) return;
-      const dpr = window.devicePixelRatio || 1;
-      const rect = heroEl.getBoundingClientRect();
-      canvas.width = rect.width * dpr;
-      canvas.height = rect.height * dpr;
-      canvas.style.width = `${rect.width}px`;
-      canvas.style.height = `${rect.height}px`;
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    }
-    resizeHeroCanvas();
-    window.addEventListener('resize', resizeHeroCanvas);
+    heroSection.addEventListener('mousemove', e => {
+      const rect = heroSection.getBoundingClientRect();
+      revealTargetX = e.clientX - rect.left;
+      revealTargetY = e.clientY - rect.top;
 
-    function spawnStitch(x, y) {
-      if (particles.length >= MAX_PARTICLES) {
-        particles.shift();
-      }
-      particles.push({
-        x: x,
-        y: y,
-        born: performance.now(),
-        size: 6
-      });
-    }
-
-    heroEl.addEventListener('mousemove', e => {
-      const rect = heroEl.getBoundingClientRect();
-      const curX = e.clientX - rect.left;
-      const curY = e.clientY - rect.top;
-
-      if (lastSpawnX === null || lastSpawnY === null) {
-        lastSpawnX = curX;
-        lastSpawnY = curY;
-        spawnStitch(curX, curY);
-        return;
-      }
-
-      const dx = curX - lastSpawnX;
-      const dy = curY - lastSpawnY;
-      const dist = Math.hypot(dx, dy);
-
-      if (dist >= SPACING) {
-        const steps = Math.floor(dist / SPACING);
-        for (let i = 1; i <= steps; i++) {
-          const t = i / steps;
-          const sx = lastSpawnX + dx * t;
-          const sy = lastSpawnY + dy * t;
-          spawnStitch(sx, sy);
-        }
-        lastSpawnX = curX;
-        lastSpawnY = curY;
+      if (!heroTexture.classList.contains('active')) {
+        revealCurrentX = revealTargetX;
+        revealCurrentY = revealTargetY;
+        heroTexture.classList.add('active');
       }
     });
 
-    heroEl.addEventListener('mouseleave', () => {
-      lastSpawnX = null;
-      lastSpawnY = null;
+    heroSection.addEventListener('mouseleave', () => {
+      heroTexture.classList.remove('active');
     });
 
-    function renderHeroTrail(now) {
-      const rect = heroEl.getBoundingClientRect();
-      ctx.clearRect(0, 0, rect.width, rect.height);
+    function animateHeroTexture() {
+      // Lerp factor 0.38 for immediate, responsive peeling interaction
+      revealCurrentX += (revealTargetX - revealCurrentX) * 0.38;
+      revealCurrentY += (revealTargetY - revealCurrentY) * 0.38;
 
-      particles = particles.filter(p => {
-        const age = now - p.born;
-        if (age >= LIFETIME) return false;
+      heroTexture.style.setProperty('--reveal-x', `${revealCurrentX}px`);
+      heroTexture.style.setProperty('--reveal-y', `${revealCurrentY}px`);
 
-        const progress = age / LIFETIME;
-        const alpha = Math.max(0, 1 - progress);
-        const currentSize = p.size * (1 - progress * 0.65);
-
-        ctx.save();
-        ctx.globalAlpha = alpha;
-        ctx.fillStyle = '#C8956D';
-        ctx.fillRect(p.x - currentSize / 2, p.y - currentSize / 2, currentSize, currentSize);
-        ctx.restore();
-
-        return true;
-      });
-
-      requestAnimationFrame(renderHeroTrail);
+      requestAnimationFrame(animateHeroTexture);
     }
-    requestAnimationFrame(renderHeroTrail);
+    animateHeroTexture();
 
     /* ==========================================================================
-       4. NAVIGATION OVERLAY (FULL-SCREEN)
+       04. NAVIGATION: TORN FABRIC REVEAL & EDITORIAL PREVIEWS
        ========================================================================== */
     const navTrigger = document.getElementById('navTrigger');
     const navOverlay = document.getElementById('navOverlay');
     const navClose = document.getElementById('navClose');
     const navLinks = document.querySelectorAll('.nav-link');
+    const previewCaption = document.getElementById('previewCaption');
+
+    const captions = {
+      studio: '01 // RAW WEAVE TEXTURE',
+      approach: '02 // ALGORITHMIC LATTICE',
+      services: '03 // DIGITAL SILK & LIGHT',
+      work: '04 // CONCEPT HIGH-FASHION',
+      contact: '05 // OBSIDIAN & AMBER GLOW'
+    };
 
     function openNav() {
+      navOverlay.classList.remove('closing');
       navOverlay.classList.add('active');
       document.body.style.overflow = 'hidden';
-      updateActiveNavLink();
     }
 
     function closeNav() {
       navOverlay.classList.remove('active');
-      document.body.style.overflow = '';
+      navOverlay.classList.add('closing');
+      setTimeout(() => {
+        navOverlay.classList.remove('closing');
+        document.body.style.overflow = '';
+      }, 550);
     }
 
     navTrigger.addEventListener('click', openNav);
@@ -1945,29 +2108,50 @@
       }
     });
 
-    function updateActiveNavLink() {
-      const sections = ['hero', 'approach', 'services', 'work', 'contact'];
-      let currentSection = 'hero';
-      const scrollPos = window.scrollY + 200;
+    // Swatch hover preview switching
+    document.querySelectorAll('.nav-links li').forEach(li => {
+      li.addEventListener('mouseenter', () => {
+        const swatchKey = li.getAttribute('data-swatch');
+        if (!swatchKey) return;
 
-      sections.forEach(id => {
-        const el = document.getElementById(id);
-        if (el && el.offsetTop <= scrollPos) {
-          currentSection = id;
+        document.querySelectorAll('.nav-swatch').forEach(sw => {
+          sw.classList.remove('active');
+        });
+
+        const activeSwatch = document.getElementById(`swatch-${swatchKey}`);
+        if (activeSwatch) activeSwatch.classList.add('active');
+
+        if (captions[swatchKey]) {
+          previewCaption.textContent = captions[swatchKey];
         }
       });
-
-      document.querySelectorAll('.nav-links li').forEach(li => {
-        if (li.getAttribute('data-section') === currentSection) {
-          li.classList.add('active');
-        } else {
-          li.classList.remove('active');
-        }
-      });
-    }
+    });
 
     /* ==========================================================================
-       5. SERVICES DETAILS MODAL
+       05. 3D TILT EFFECT ON SERVICE CARDS
+       Perspective transform following mouse position (max ~6 degrees)
+       ========================================================================== */
+    const serviceCards = document.querySelectorAll('.service-card');
+    serviceCards.forEach(card => {
+      card.addEventListener('mousemove', e => {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+        const rotateX = ((y - centerY) / centerY) * -5.5;
+        const rotateY = ((x - centerX) / centerX) * 5.5;
+
+        card.style.transform = `perspective(1000px) rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg) translateY(-4px)`;
+      });
+
+      card.addEventListener('mouseleave', () => {
+        card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0px)';
+      });
+    });
+
+    /* ==========================================================================
+       06. SERVICE DETAILS MODAL
        ========================================================================== */
     const serviceModal = document.getElementById('serviceModal');
     const modalClose = document.getElementById('modalClose');
@@ -2021,26 +2205,27 @@
     });
 
     /* ==========================================================================
-       6. GSAP + SCROLLTRIGGER ANIMATIONS
+       07. GSAP + SCROLLTRIGGER ANIMATIONS
        ========================================================================== */
     if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
       gsap.registerPlugin(ScrollTrigger);
 
+      // Hero Entrance
       gsap.fromTo('.hero__headline',
-        { opacity: 0, y: 50, scale: 0.98 },
+        { opacity: 0, y: 40 },
         {
           opacity: 1,
           y: 0,
-          scale: 1,
-          duration: 1.1,
-          ease: 'power4.out',
+          duration: 1.0,
+          ease: 'power3.out',
           delay: 0.2
         }
       );
 
+      // Generic Reveal Elements
       gsap.utils.toArray('.reveal').forEach(el => {
         gsap.fromTo(el,
-          { opacity: 0, y: 35 },
+          { opacity: 0, y: 30 },
           {
             opacity: 1,
             y: 0,
@@ -2055,12 +2240,13 @@
         );
       });
 
+      // Stagger Service Cards
       gsap.fromTo('.service-card',
-        { opacity: 0, y: 45 },
+        { opacity: 0, y: 40 },
         {
           opacity: 1,
           y: 0,
-          duration: 0.75,
+          duration: 0.7,
           stagger: 0.1,
           ease: 'power3.out',
           scrollTrigger: {
@@ -2071,12 +2257,13 @@
         }
       );
 
+      // Stagger Work Cards
       gsap.fromTo('.work-card',
-        { opacity: 0, y: 45 },
+        { opacity: 0, y: 40 },
         {
           opacity: 1,
           y: 0,
-          duration: 0.75,
+          duration: 0.7,
           stagger: 0.12,
           ease: 'power3.out',
           scrollTrigger: {
@@ -2087,6 +2274,7 @@
         }
       );
 
+      // Type-in animation for section headers
       gsap.utils.toArray('.type-in').forEach(el => {
         const fullText = el.getAttribute('data-text') || el.textContent;
         el.textContent = '';
@@ -2109,4 +2297,3 @@
   </script>
 </body>
 </html>
-
